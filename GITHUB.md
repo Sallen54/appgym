@@ -17,13 +17,12 @@ Android solo deja actualizar una app si la versión nueva está firmada con **la
 misma clave** que la instalada. Si cambias de clave, la única forma de instalar
 es desinstalar primero, y eso **borra tus entrenamientos**.
 
-Ahora mismo tu app está firmada con la clave de depuración que Android Studio creó
-en tu ordenador. Vas a usar **esa misma clave** para las versiones de GitHub, así
-que la primera actualización entrará sin perder nada.
+La app usa una clave propia guardada en `%USERPROFILE%\appgym-release.jks`, con
+alias `appgym` y una contraseña que generaste al crearla.
 
-No es la práctica habitual en apps de tienda, pero para una app personal que solo
-usas tú es lo sensato: te ahorra perder el historial. Si algún día la publicas en
-Google Play, entonces sí crearás una clave nueva desde cero.
+**Haz una copia de ese archivo y de la contraseña en un sitio seguro.** Sin ellos
+no puedes publicar actualizaciones que se instalen encima de la app: tendrías que
+desinstalar, y eso borra tus entrenamientos.
 
 ---
 
@@ -101,30 +100,39 @@ o no tiene permiso, o has escrito mal el nombre del repositorio.
 en PowerShell. En PowerShell las variables son `$env:USERPROFILE`, no
 `%USERPROFILE%`.
 
+**`Password is not ASCII` al crear la clave** — la contraseña lleva una eñe, una
+tilde o algún carácter raro. Solo letras y números sin acentos.
+
+**`base64: invalid input` en GitHub** — el secreto se pegó incompleto. Compara el
+número de "Caracteres recibidos" del log con el que te dio `$b64.Length`.
+
 ---
 
 ## Paso 3 · Subir tu clave de firma como secreto
 
 GitHub necesita tu clave para firmar el APK. Se sube convertida a texto.
 
-La terminal de Android Studio en Windows es **PowerShell**. Comprueba primero que
-la clave existe:
+Si aún no tienes la clave, este bloque la crea, genera una contraseña y deja el
+secreto copiado. La contraseña debe ser **ASCII**: sin eñes, sin tildes.
 
 ```powershell
-Test-Path "$env:USERPROFILE\.android\debug.keystore"
+$pass = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 24 | % {[char]$_})
+$kt = "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe"
+& $kt -genkeypair -v -keystore "$env:USERPROFILE\appgym-release.jks" -alias appgym -keyalg RSA -keysize 2048 -validity 10000 -storepass $pass -keypass $pass -dname "CN=Alejandro, O=AppGym, C=ES"
+Write-Host "GUARDA ESTA CONTRASENA:" -ForegroundColor Yellow
+Write-Host $pass
 ```
 
-Debe responder `True`. Si dice `False`, Android Studio todavía no la ha creado:
-compila la app una vez en modo debug y vuelve a probar.
-
-Ahora copia la clave codificada al portapapeles:
+Y para copiar el secreto cuando lo necesites:
 
 ```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("$env:USERPROFILE\.android\debug.keystore")) | Set-Clipboard
+$b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$env:USERPROFILE\appgym-release.jks"))
+$b64 | Set-Clipboard
+$b64.Length
 ```
 
-No sale nada por pantalla; el texto queda en el portapapeles y ya está listo para
-pegar. Sin archivos temporales que borrar después.
+**Apunta ese número.** El workflow imprime cuántos caracteres recibe, así que si
+no coinciden sabrás al instante que el pegado se cortó.
 
 Ahora en GitHub, dentro de tu repositorio:
 
@@ -135,12 +143,9 @@ Crea estos cuatro:
 | Name | Secret |
 |---|---|
 | `KEYSTORE_BASE64` | el texto largo que acabas de copiar |
-| `KEYSTORE_PASSWORD` | `android` |
-| `KEY_ALIAS` | `androiddebugkey` |
-| `KEY_PASSWORD` | `android` |
-
-Esas tres contraseñas son las que Android Studio usa siempre por defecto. No las
-cambies.
+| `KEYSTORE_PASSWORD` | tu contraseña |
+| `KEY_ALIAS` | `appgym` |
+| `KEY_PASSWORD` | la misma contraseña |
 
 ---
 
@@ -210,9 +215,9 @@ Los datos viven solo en el móvil. Para conservarlos, exporta el informe de vez 
 cuando desde Progreso.
 
 **Si algún día pierdes el ordenador**, con el repositorio recuperas todo el
-código. Pero la clave de firma está en `%USERPROFILE%\.android\debug.keystore` y
-esa no se sube a ningún sitio: cópiala a un lugar seguro. Sin ella no podrás
-publicar actualizaciones que se instalen encima de la app que ya tienes.
+código. Pero la clave de firma está en `%USERPROFILE%\appgym-release.jks` y esa
+no se sube a ningún sitio: cópiala a un lugar seguro junto con su contraseña. Sin
+ellas no podrás publicar actualizaciones que se instalen encima de la app.
 
 **El proyecto no trae `gradlew`.** No pasa nada: Android Studio usa su propio
 Gradle, y GitHub instala el suyo. Si algún día quieres usar `./gradlew` desde la

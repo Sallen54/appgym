@@ -64,9 +64,18 @@ jobs:
             exit 1
           fi
 
+          # Diagnóstico: la longitud no revela la clave pero delata un pegado
+          # incompleto, que es la causa habitual de que base64 falle.
+          LIMPIO=$(printf '%s' "$KEYSTORE_BASE64" | tr -d '[:space:]')
+          echo "Caracteres recibidos: ${#LIMPIO}"
+          if [ $((${#LIMPIO} % 4)) -ne 0 ]; then
+            echo "::error::La longitud no es múltiplo de 4: el secreto está cortado."
+            exit 1
+          fi
+
           # Al pegar el secreto se cuelan saltos de línea, retornos de carro o
           # espacios. base64 los rechaza, así que se limpian antes de decodificar.
-          printf '%s' "$KEYSTORE_BASE64" | tr -d '[:space:]' | base64 -d > "$RUNNER_TEMP/firma.jks" 2>/dev/null || {
+          printf '%s' "$LIMPIO" | base64 -d > "$RUNNER_TEMP/firma.jks" 2>/dev/null || {
             echo "::error::El secreto KEYSTORE_BASE64 no es base64 válido."
             echo "Vuelve a generarlo en PowerShell con:"
             echo '  [Convert]::ToBase64String([IO.File]::ReadAllBytes("$env:USERPROFILE\.android\debug.keystore")) | Set-Clipboard'
