@@ -45,7 +45,7 @@ Abre la terminal de Android Studio (abajo del todo, pestaña **Terminal**).
 
 Primero las cuatro primeras líneas, que no llevan nada que cambiar:
 
-```bash
+```powershell
 git init
 git add .
 git commit -m "AppGym funcionando"
@@ -55,7 +55,7 @@ git branch -M main
 Y ahora la dirección del repositorio. **Escribe tu usuario de GitHub donde pone
 `Sallen54`** — no pegues la línea sin mirar:
 
-```bash
+```powershell
 git remote add origin https://github.com/Sallen54/appgym.git
 git remote -v
 git push -u origin main
@@ -83,7 +83,7 @@ necesitar otra vez para Obtainium.
 **`error: remote origin already exists`** — la dirección ya estaba guardada, y
 `git remote add` no la reemplaza. Corrígela con:
 
-```bash
+```powershell
 git remote set-url origin https://github.com/Sallen54/appgym.git
 ```
 
@@ -97,22 +97,34 @@ tiene permiso de escritura sobre el repositorio.
 **`Repository not found`** con un repositorio privado — casi siempre es el token:
 o no tiene permiso, o has escrito mal el nombre del repositorio.
 
+**`ERROR_PATH_NOT_FOUND` al codificar la clave** — estás usando sintaxis de CMD
+en PowerShell. En PowerShell las variables son `$env:USERPROFILE`, no
+`%USERPROFILE%`.
+
 ---
 
 ## Paso 3 · Subir tu clave de firma como secreto
 
 GitHub necesita tu clave para firmar el APK. Se sube convertida a texto.
 
-En la terminal de Android Studio:
+La terminal de Android Studio en Windows es **PowerShell**. Comprueba primero que
+la clave existe:
 
-```bash
-certutil -encode "%USERPROFILE%\.android\debug.keystore" "%TEMP%\firma.txt"
-notepad "%TEMP%\firma.txt"
+```powershell
+Test-Path "$env:USERPROFILE\.android\debug.keystore"
 ```
 
-Se abre el Bloc de notas con un texto largo. **Borra la primera y la última
-línea** (las que ponen `-----BEGIN CERTIFICATE-----` y `-----END CERTIFICATE-----`)
-y copia todo lo demás.
+Debe responder `True`. Si dice `False`, Android Studio todavía no la ha creado:
+compila la app una vez en modo debug y vuelve a probar.
+
+Ahora copia la clave codificada al portapapeles:
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$env:USERPROFILE\.android\debug.keystore")) | Set-Clipboard
+```
+
+No sale nada por pantalla; el texto queda en el portapapeles y ya está listo para
+pegar. Sin archivos temporales que borrar después.
 
 Ahora en GitHub, dentro de tu repositorio:
 
@@ -130,17 +142,11 @@ Crea estos cuatro:
 Esas tres contraseñas son las que Android Studio usa siempre por defecto. No las
 cambies.
 
-Cuando termines, borra el archivo temporal:
-
-```bash
-del "%TEMP%\firma.txt"
-```
-
 ---
 
 ## Paso 4 · Publicar la primera versión
 
-```bash
+```powershell
 git tag v1.0
 git push origin v1.0
 ```
@@ -174,7 +180,7 @@ notificación te instala la actualización encima, conservando tus datos.
 
 Cuando quieras publicar una versión nueva:
 
-```bash
+```powershell
 git add .
 git commit -m "lo que has cambiado"
 git push

@@ -226,7 +226,7 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
             val rutinaDelDia = delDia?.let { d -> routines.firstOrNull { it.name == d.name } }
 
             item {
-                if (rutinaDelDia != null) {
+                if (delDia != null && rutinaDelDia != null) {
                     TarjetaQueToca(
                         nombre = rutinaDelDia.name,
                         detalle = "${delDia.items.size} ejercicios · " +
