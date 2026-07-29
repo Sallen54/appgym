@@ -41,17 +41,28 @@ Deja la página abierta: te va a dar unos comandos que necesitas ahora.
 
 ## Paso 2 · Subir el código
 
-Abre la terminal de Android Studio (abajo del todo, pestaña **Terminal**) y pega
-esto línea a línea. Cambia `TU-USUARIO` por tu usuario de GitHub.
+Abre la terminal de Android Studio (abajo del todo, pestaña **Terminal**).
+
+Primero las cuatro primeras líneas, que no llevan nada que cambiar:
 
 ```bash
 git init
 git add .
 git commit -m "AppGym funcionando"
 git branch -M main
-git remote add origin https://github.com/TU-USUARIO/appgym.git
+```
+
+Y ahora la dirección del repositorio. **Escribe tu usuario de GitHub donde pone
+`Sallen54`** — no pegues la línea sin mirar:
+
+```bash
+git remote add origin https://github.com/Sallen54/appgym.git
+git remote -v
 git push -u origin main
 ```
+
+`git remote -v` debe enseñarte dos líneas con tu usuario. Si ves otra cosa,
+mira más abajo en "Si algo va mal".
 
 Te pedirá usuario y contraseña. **La contraseña no vale**: necesitas un token.
 
@@ -66,6 +77,25 @@ Te pedirá usuario y contraseña. **La contraseña no vale**: necesitas un token
 
 Ese token es la "contraseña" cuando git te la pida. Guárdalo, lo vas a
 necesitar otra vez para Obtainium.
+
+### Si algo va mal
+
+**`error: remote origin already exists`** — la dirección ya estaba guardada, y
+`git remote add` no la reemplaza. Corrígela con:
+
+```bash
+git remote set-url origin https://github.com/Sallen54/appgym.git
+```
+
+**`src refspec main does not match any`** — falta el commit. Haz `git add .` y
+`git commit -m "AppGym funcionando"` antes de volver a empujar.
+
+**`Authentication failed`** — la contraseña de GitHub no vale aquí. Como
+contraseña hay que poner el token. Si te sigue rechazando, es que el token no
+tiene permiso de escritura sobre el repositorio.
+
+**`Repository not found`** con un repositorio privado — casi siempre es el token:
+o no tiene permiso, o has escrito mal el nombre del repositorio.
 
 ---
 
@@ -132,7 +162,7 @@ suele decir exactamente qué falta.
    Pega el token del paso 2. *(Esto hace falta porque tu repositorio es privado;
    sin el token Obtainium no lo ve.)*
 3. Vuelve a **Add App** y pega la dirección de tu repositorio:
-   `https://github.com/TU-USUARIO/appgym`
+   `https://github.com/Sallen54/appgym`
 4. **Add**.
 
 Ya está. Obtainium comprueba solo si hay versión nueva y te avisa. Al tocar la
