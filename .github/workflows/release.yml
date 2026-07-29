@@ -72,11 +72,25 @@ jobs:
       - name: Renombrar y comprobar que el APK va firmado
         run: |
           ORIGINAL=$(find app/build/outputs/apk/release -name "*.apk" | head -1)
+          if [ -z "$ORIGINAL" ]; then
+            echo "::error::No se generó ningún APK."
+            exit 1
+          fi
           APK="app/build/outputs/apk/release/appgym-${{ steps.version.outputs.nombre }}.apk"
           mv "$ORIGINAL" "$APK"
           echo "APK: $APK"
-          "$ANDROID_HOME"/build-tools/34.0.0/apksigner verify --print-certs "$APK" \
-            || "$ANDROID_HOME"/build-tools/35.0.0/apksigner verify --print-certs "$APK"
+
+          # apksigner vive en una versión de build-tools que cambia según el runner.
+          SIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f 2>/dev/null | sort -r | head -1)
+          if [ -n "$SIGNER" ]; then
+            "$SIGNER" verify --print-certs "$APK"
+          else
+            echo "::warning::No encuentro apksigner; compruebo solo que el APK lleva firma."
+            unzip -l "$APK" | grep -q "META-INF/.*\.RSA" || {
+              echo "::error::El APK no está firmado: no se podría instalar."
+              exit 1
+            }
+          fi
           echo "APK_PATH=$APK" >> "$GITHUB_ENV"
 
       - name: Borrar la clave del disco
