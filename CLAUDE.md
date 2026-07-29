@@ -55,6 +55,14 @@ Dates are stored as `LocalDate.toEpochDay()` (Long), times as minutes since midn
 
 **Seeded plans.** `SeedData.kt` holds the plan the app installs on first run (currently one: "Grasa y músculo"; an adaptation plan was retired once Alejandro finished it). Changing them requires bumping `SeedData.VERSION`; `GymRepository.reseedPlan()` then swaps them in. That function deliberately preserves (a) routines the user created by hand (`planKey` is blank) and (b) old seeded routines already referenced by a logged session. Keep both guarantees. Retired routine names must be added to `SeedData.obsoleteNames` or they linger forever, and `DEFAULT_KEY` must always point at a plan that still exists — `GymViewModel` falls back to it if the stored `activePlan` no longer resolves.
 
+### Room schema export and CI
+
+`exportSchema = true` writes `app/schemas/<db>/<version>.json` via the KSP arg in `app/build.gradle.kts`. Both the debug and release variants export to that same directory, so **running `gradle test` (which builds both) makes the two KSP tasks race and one of them dies with `IllegalStateException: Empty schema file`**. Android Studio never reproduces it because it only builds debug.
+
+CI therefore runs `testDebugUnitTest`, not `test`. If you ever need both variants in one invocation, move to the `androidx.room` Gradle plugin with `room { schemaDirectory(...) }`, which gives each variant its own folder.
+
+The schemas are gitignored, so they are a local record only — there are no `MigrationTestHelper` tests yet. Committing them is the prerequisite if you want to add real migration tests.
+
 ### Exercise catalog
 
 `ExerciseCatalog.kt` is a hand-written static list of 92 exercises. Each `id` must have a matching `app/src/main/assets/exercises/<id>.webp`. Images load through `AssetImage`, which keeps its own `LruCache` — there is no Coil/Glide dependency and adding one is not necessary.

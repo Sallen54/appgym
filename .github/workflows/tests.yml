@@ -18,7 +18,14 @@ jobs:
         with:
           gradle-version: '8.9'
           cache-read-only: false
+      - name: Limpiar esquemas de Room
+        # Room exporta el esquema de la base de datos a app/schemas. Si queda un
+        # archivo a medias de una ejecución anterior, la siguiente falla al leerlo.
+        run: rm -rf app/schemas
+
       - name: Tests unitarios
-        run: gradle test --stacktrace
+        # testDebugUnitTest y no test: "test" compila debug Y release a la vez, y
+        # ambas variantes exportan el esquema al mismo sitio, pisándose entre ellas.
+        run: gradle testDebugUnitTest --stacktrace
       - name: Que al menos compile
         run: gradle assembleDebug --stacktrace

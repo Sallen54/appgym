@@ -46,8 +46,14 @@ jobs:
           echo "codigo=${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "Versión $NOMBRE (código ${GITHUB_RUN_NUMBER})"
 
+      - name: Limpiar esquemas de Room
+        # Evita que un esquema a medias de otra ejecución rompa la compilación.
+        run: rm -rf app/schemas
+
       - name: Pasar los tests
-        run: gradle test --stacktrace
+        # Solo la variante debug: "test" compila también release, y las dos
+        # exportan el esquema de Room al mismo sitio y se pisan.
+        run: gradle testDebugUnitTest --stacktrace
 
       - name: Restaurar la clave de firma
         env:
