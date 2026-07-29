@@ -63,7 +63,32 @@ jobs:
             echo "::error::Falta el secreto KEYSTORE_BASE64. Sin él la app no se puede instalar."
             exit 1
           fi
-          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/firma.jks"
+
+          # Al pegar el secreto se cuelan saltos de línea, retornos de carro o
+          # espacios. base64 los rechaza, así que se limpian antes de decodificar.
+          printf '%s' "$KEYSTORE_BASE64" | tr -d '[:space:]' | base64 -d > "$RUNNER_TEMP/firma.jks" 2>/dev/null || {
+            echo "::error::El secreto KEYSTORE_BASE64 no es base64 válido."
+            echo "Vuelve a generarlo en PowerShell con:"
+            echo '  [Convert]::ToBase64String([IO.File]::ReadAllBytes("$env:USERPROFILE\.android\debug.keystore")) | Set-Clipboard'
+            echo "y pégalo entero, sin añadir saltos de línea."
+            exit 1
+          }
+
+          TAM=$(stat -c%s "$RUNNER_TEMP/firma.jks")
+          echo "Clave restaurada: $TAM bytes"
+          if [ "$TAM" -lt 500 ]; then
+            echo "::error::La clave restaurada es demasiado pequeña ($TAM bytes); el secreto está incompleto."
+            exit 1
+          fi
+
+          # Comprobar que es un almacén de claves de verdad y que el alias existe.
+          keytool -list -keystore "$RUNNER_TEMP/firma.jks" \
+            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
+            -alias "${{ secrets.KEY_ALIAS }}" > /dev/null || {
+            echo "::error::La clave no se puede abrir. Revisa KEYSTORE_PASSWORD (android) y KEY_ALIAS (androiddebugkey)."
+            exit 1
+          }
+          echo "Alias encontrado y contraseña correcta."
 
       - name: Compilar el APK firmado
         env:
