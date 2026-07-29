@@ -1,0 +1,183 @@
+# Subir AppGym a GitHub y actualizarla por internet
+
+Al terminar esto, cada vez que quieras publicar una versión nueva:
+
+1. Subes los cambios y creas una etiqueta.
+2. GitHub compila la app, pasa los tests y publica el APK.
+3. El móvil te avisa de que hay actualización y la instala encima. **Tus
+   entrenamientos se conservan.**
+
+Se hace una sola vez. Calcula 20 minutos.
+
+---
+
+## Antes de empezar: lo de la firma
+
+Android solo deja actualizar una app si la versión nueva está firmada con **la
+misma clave** que la instalada. Si cambias de clave, la única forma de instalar
+es desinstalar primero, y eso **borra tus entrenamientos**.
+
+Ahora mismo tu app está firmada con la clave de depuración que Android Studio creó
+en tu ordenador. Vas a usar **esa misma clave** para las versiones de GitHub, así
+que la primera actualización entrará sin perder nada.
+
+No es la práctica habitual en apps de tienda, pero para una app personal que solo
+usas tú es lo sensato: te ahorra perder el historial. Si algún día la publicas en
+Google Play, entonces sí crearás una clave nueva desde cero.
+
+---
+
+## Paso 1 · Crear el repositorio
+
+1. Entra en [github.com/new](https://github.com/new).
+2. Nombre: `appgym`.
+3. Marca **Private**.
+4. **No** marques nada de "Add a README" ni ".gitignore" ni "license".
+5. Create repository.
+
+Deja la página abierta: te va a dar unos comandos que necesitas ahora.
+
+---
+
+## Paso 2 · Subir el código
+
+Abre la terminal de Android Studio (abajo del todo, pestaña **Terminal**) y pega
+esto línea a línea. Cambia `TU-USUARIO` por tu usuario de GitHub.
+
+```bash
+git init
+git add .
+git commit -m "AppGym funcionando"
+git branch -M main
+git remote add origin https://github.com/TU-USUARIO/appgym.git
+git push -u origin main
+```
+
+Te pedirá usuario y contraseña. **La contraseña no vale**: necesitas un token.
+
+### Crear el token
+
+1. [github.com/settings/tokens](https://github.com/settings/tokens) → *Generate
+   new token* → **classic**.
+2. Note: `appgym`.
+3. Expiration: `No expiration` (o un año, como prefieras).
+4. Marca la casilla **repo** (la de arriba, que marca todas las de dentro).
+5. Generate token y **cópialo**. Solo se ve una vez.
+
+Ese token es la "contraseña" cuando git te la pida. Guárdalo, lo vas a
+necesitar otra vez para Obtainium.
+
+---
+
+## Paso 3 · Subir tu clave de firma como secreto
+
+GitHub necesita tu clave para firmar el APK. Se sube convertida a texto.
+
+En la terminal de Android Studio:
+
+```bash
+certutil -encode "%USERPROFILE%\.android\debug.keystore" "%TEMP%\firma.txt"
+notepad "%TEMP%\firma.txt"
+```
+
+Se abre el Bloc de notas con un texto largo. **Borra la primera y la última
+línea** (las que ponen `-----BEGIN CERTIFICATE-----` y `-----END CERTIFICATE-----`)
+y copia todo lo demás.
+
+Ahora en GitHub, dentro de tu repositorio:
+
+**Settings → Secrets and variables → Actions → New repository secret**
+
+Crea estos cuatro:
+
+| Name | Secret |
+|---|---|
+| `KEYSTORE_BASE64` | el texto largo que acabas de copiar |
+| `KEYSTORE_PASSWORD` | `android` |
+| `KEY_ALIAS` | `androiddebugkey` |
+| `KEY_PASSWORD` | `android` |
+
+Esas tres contraseñas son las que Android Studio usa siempre por defecto. No las
+cambies.
+
+Cuando termines, borra el archivo temporal:
+
+```bash
+del "%TEMP%\firma.txt"
+```
+
+---
+
+## Paso 4 · Publicar la primera versión
+
+```bash
+git tag v1.0
+git push origin v1.0
+```
+
+Ve a la pestaña **Actions** de tu repositorio. Verás la compilación en marcha.
+Tarda unos 5 minutos. Cuando acabe, en **Releases** tendrás `appgym-1.0.apk`.
+
+Si algo falla, entra en la ejecución y mira qué paso está en rojo: el mensaje
+suele decir exactamente qué falta.
+
+---
+
+## Paso 5 · Configurar el móvil con Obtainium
+
+1. Instala **Obtainium** desde
+   [su página de releases](https://github.com/ImranR98/Obtainium/releases) — baja
+   el archivo que acaba en `.apk`.
+2. Ábrelo y ve a **Settings → Source-specific → GitHub → Personal Access Token**.
+   Pega el token del paso 2. *(Esto hace falta porque tu repositorio es privado;
+   sin el token Obtainium no lo ve.)*
+3. Vuelve a **Add App** y pega la dirección de tu repositorio:
+   `https://github.com/TU-USUARIO/appgym`
+4. **Add**.
+
+Ya está. Obtainium comprueba solo si hay versión nueva y te avisa. Al tocar la
+notificación te instala la actualización encima, conservando tus datos.
+
+---
+
+## El día a día
+
+Cuando quieras publicar una versión nueva:
+
+```bash
+git add .
+git commit -m "lo que has cambiado"
+git push
+git tag v1.1
+git push origin v1.1
+```
+
+Cinco minutos después, el móvil te avisa.
+
+**Sube el número de la etiqueta cada vez** (v1.1, v1.2, v1.3…). Si repites una
+etiqueta, GitHub no publica nada nuevo.
+
+---
+
+## Cosas que conviene saber
+
+**Cada push a `main` pasa los tests automáticamente.** Si rompes algo, te sale un
+aspa roja en GitHub antes de que llegue al móvil. La publicación del APK solo
+ocurre con las etiquetas, así que puedes subir código a medias sin miedo.
+
+**Tu clave de firma no está en el repositorio.** El `.gitignore` excluye
+`*.jks`, `*.keystore` y `keystore.properties`. Está solo como secreto en GitHub,
+que es donde debe estar.
+
+**El repositorio es tu copia de seguridad del código, no de tus entrenamientos.**
+Los datos viven solo en el móvil. Para conservarlos, exporta el informe de vez en
+cuando desde Progreso.
+
+**Si algún día pierdes el ordenador**, con el repositorio recuperas todo el
+código. Pero la clave de firma está en `%USERPROFILE%\.android\debug.keystore` y
+esa no se sube a ningún sitio: cópiala a un lugar seguro. Sin ella no podrás
+publicar actualizaciones que se instalen encima de la app que ya tienes.
+
+**El proyecto no trae `gradlew`.** No pasa nada: Android Studio usa su propio
+Gradle, y GitHub instala el suyo. Si algún día quieres usar `./gradlew` desde la
+terminal, ejecuta una vez `gradle wrapper --gradle-version 8.9`.

@@ -1,0 +1,97 @@
+name: Publicar APK
+
+# Se dispara al crear una etiqueta tipo v1.1, y también a mano desde la web.
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión (ej. 1.1)'
+        required: true
+        default: '1.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # El proyecto no trae gradlew, así que el runner instala Gradle él mismo.
+          gradle-version: '8.9'
+          cache-read-only: false
+
+      - name: Calcular la versión
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            NOMBRE="${{ inputs.version }}"
+          else
+            NOMBRE="${GITHUB_REF_NAME#v}"
+          fi
+          echo "nombre=$NOMBRE" >> "$GITHUB_OUTPUT"
+          # El código de versión debe subir siempre; el número de ejecución sirve.
+          echo "codigo=${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "Versión $NOMBRE (código ${GITHUB_RUN_NUMBER})"
+
+      - name: Pasar los tests
+        run: gradle test --stacktrace
+
+      - name: Restaurar la clave de firma
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::Falta el secreto KEYSTORE_BASE64. Sin él la app no se puede instalar."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/firma.jks"
+
+      - name: Compilar el APK firmado
+        env:
+          APP_VERSION_NAME: ${{ steps.version.outputs.nombre }}
+          APP_VERSION_CODE: ${{ steps.version.outputs.codigo }}
+          KEYSTORE_PATH: ${{ runner.temp }}/firma.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: gradle assembleRelease --stacktrace
+
+      - name: Renombrar y comprobar que el APK va firmado
+        run: |
+          ORIGINAL=$(find app/build/outputs/apk/release -name "*.apk" | head -1)
+          APK="app/build/outputs/apk/release/appgym-${{ steps.version.outputs.nombre }}.apk"
+          mv "$ORIGINAL" "$APK"
+          echo "APK: $APK"
+          "$ANDROID_HOME"/build-tools/34.0.0/apksigner verify --print-certs "$APK" \
+            || "$ANDROID_HOME"/build-tools/35.0.0/apksigner verify --print-certs "$APK"
+          echo "APK_PATH=$APK" >> "$GITHUB_ENV"
+
+      - name: Borrar la clave del disco
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firma.jks"
+
+      - name: Publicar la release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', steps.version.outputs.nombre) || github.ref_name }}
+          name: AppGym ${{ steps.version.outputs.nombre }}
+          files: ${{ env.APK_PATH }}
+          generate_release_notes: true
+          body: |
+            Versión ${{ steps.version.outputs.nombre }}
+
+            Descarga el APK de abajo e instálalo encima de la versión anterior.
+            Tus entrenamientos se conservan.

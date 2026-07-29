@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
+<style>
+  body { margin:0; background:#050608; font-family:Roboto,'Helvetica Neue',Arial,sans-serif; }
+  a { color:#CBF24C; text-decoration:none; } a:hover { color:#dfff7a; }
+</style>
+</helmet>
+<section id="2a" style="display:flex;flex-direction:column;gap:20px;padding:48px;align-items:flex-start">
+<div style="display:flex;align-items:center;gap:12px">
+  <span style="background:#CBF24C;color:#191D07;font-weight:700;font-size:13px;border-radius:8px;padding:4px 9px">2a</span>
+  <span style="color:#B3AC9D;font-size:14px;font-family:ui-monospace,monospace">Rediseño amigable — oscuro cálido, más aire, texto mayor, UX mejorada</span>
+</div>
+<div style="display:flex;gap:44px;align-items:flex-start">
+
+<!-- ============ HOY v2 ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#7E7869;font-size:12px;font-family:ui-monospace,monospace">Hoy</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#171511;color:#F4F0E6;font-family:Outfit,sans-serif">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;padding:14px 22px 4px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:15px;color:#B3AC9D">Hola, Alejandro</span>
+      <span style="font-size:28px;font-weight:600;letter-spacing:-.4px;line-height:33px">Torso A · empuje</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;background:#23211A;border-radius:99px;padding:9px 14px">
+      <span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:16px;color:#CBF24C">schedule</span>
+      <span style="font-size:13px;font-weight:500;color:#F4F0E6">1 h 12 min</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;padding:12px 22px 0">
+    <div style="flex:1;display:flex;gap:6px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;padding:9px 0"><span style="font-size:11px;color:#7E7869">J</span><span style="font-size:15px;font-weight:500;color:#B3AC9D">23</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;padding:9px 0"><span style="font-size:11px;color:#7E7869">V</span><span style="font-size:15px;font-weight:500;color:#B3AC9D">24</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;padding:9px 0"><span style="font-size:11px;color:#7E7869">S</span><span style="font-size:15px;font-weight:500;color:#B3AC9D">25</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;padding:9px 0"><span style="font-size:11px;color:#7E7869">D</span><span style="font-size:15px;font-weight:500;color:#B3AC9D">26</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;background:#CBF24C;padding:9px 0"><span style="font-size:11px;font-weight:600;color:#191D07">L</span><span style="font-size:15px;font-weight:700;color:#191D07">27</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;padding:9px 0"><span style="font-size:11px;color:#7E7869">M</span><span style="font-size:15px;font-weight:500;color:#B3AC9D">28</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;padding:9px 0"><span style="font-size:11px;color:#7E7869">X</span><span style="font-size:15px;font-weight:500;color:#B3AC9D">29</span></div>
+    </div>
+    <span style="width:42px;height:42px;border-radius:14px;background:#23211A;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#B3AC9D">calendar_month</span></span>
+  </div>
+  <div style="margin:16px 22px 0;border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center;gap:14px">
+    <div style="position:relative;width:56px;height:56px;flex-shrink:0">
+      <svg viewBox="0 0 56 56" style="width:56px;height:56px;transform:rotate(-90deg)"><circle cx="28" cy="28" r="24" fill="none" stroke="#322D25" stroke-width="6"></circle><circle cx="28" cy="28" r="24" fill="none" stroke="#CBF24C" stroke-width="6" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="65"></circle></svg>
+      <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">57%</span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:17px;font-weight:600">Buena sesión, sigue así</span>
+      <span style="font-size:14px;color:#B3AC9D">12 de 21 series · 6.240 kg movidos</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;padding:26px 22px 12px">
+    <span style="flex:1;font-size:17px;font-weight:600">Sesión de hoy</span>
+    <span style="font-size:13px;font-weight:500;color:#CBF24C">Tu plan · Fase 0</span>
+  </div>
+  <div style="margin:0 22px 10px;border-radius:24px;background:#211E18;padding:16px">
+    <div style="display:flex;align-items:center;gap:13px">
+      <div style="width:54px;height:54px;border-radius:16px;overflow:hidden;flex-shrink:0"><img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="Press de pecho" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+        <span style="font-size:16px;font-weight:600">Press de pecho en máquina</span>
+        <span style="font-size:13.5px;color:#B3AC9D">Completado · 4 de 4 series</span>
+      </div>
+      <span style="width:30px;height:30px;border-radius:50%;background:rgba(203,242,76,.16);display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:17px;color:#CBF24C">check</span></span>
+    </div>
+  </div>
+  <div style="margin:0 22px;border-radius:24px;background:#211E18;padding:16px">
+    <div style="display:flex;align-items:center;gap:13px">
+      <div style="width:54px;height:54px;border-radius:16px;overflow:hidden;flex-shrink:0"><img src="assets/exercises/jalon_al_pecho_agarre_ancho.webp" alt="Jalón al pecho" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+        <span style="font-size:16px;font-weight:600">Jalón al pecho agarre ancho</span>
+        <span style="font-size:13.5px;color:#B3AC9D">En curso · 2 de 4 series</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#7E7869">expand_less</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <div style="display:flex;align-items:center;gap:10px;border-radius:16px;background:#2A2620;padding:10px 12px">
+        <span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:#CBF24C">check_circle</span>
+        <span style="flex:1;font-size:15px;color:#B3AC9D">55 kg × 10</span>
+        <span style="font-family:'Material Symbols Rounded';font-size:16px;color:#7E7869">close</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;border-radius:16px;background:#2A2620;padding:10px 12px">
+        <span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:#CBF24C">check_circle</span>
+        <span style="flex:1;font-size:15px;color:#B3AC9D">55 kg × 10</span>
+        <span style="font-family:'Material Symbols Rounded';font-size:16px;color:#7E7869">close</span>
+      </div>
+      <div style="border-radius:18px;background:#2A2620;border:1px solid rgba(203,242,76,.4);padding:13px 12px;display:flex;flex-direction:column;gap:11px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.4px;color:#7E7869">SERIE 3</span>
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="width:34px;height:34px;border-radius:11px;background:#211E18;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:17px;color:#B3AC9D">remove</span></span>
+          <span style="flex:1;text-align:center;font-size:18px;font-weight:600">55 kg</span>
+          <span style="width:34px;height:34px;border-radius:11px;background:#211E18;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:17px;color:#B3AC9D">add</span></span>
+          <span style="width:1px;height:24px;background:#322D25"></span>
+          <span style="width:34px;height:34px;border-radius:11px;background:#211E18;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:17px;color:#B3AC9D">remove</span></span>
+          <span style="flex:1;text-align:center;font-size:18px;font-weight:600">10</span>
+          <span style="width:34px;height:34px;border-radius:11px;background:#211E18;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:17px;color:#B3AC9D">add</span></span>
+        </div>
+        <span style="height:46px;border-radius:14px;background:#CBF24C;display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:#191D07">check</span><span style="font-size:14.5px;font-weight:600;color:#191D07">Marcar serie</span></span>
+      </div>
+      <span style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 0"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#B3AC9D">add</span><span style="font-size:13.5px;font-weight:500;color:#B3AC9D">Añadir otra serie</span></span>
+    </div>
+  </div>
+  <div style="padding:16px 22px 22px">
+    <span style="height:52px;border-radius:99px;background:#23211A;border:1px solid #322D25;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#F4F0E6">add</span><span style="font-size:14.5px;font-weight:600;color:#F4F0E6">Añadir ejercicio suelto</span></span>
+  </div>
+</div>
+<div style="background:#171511;padding:10px 16px;border-top:1px solid #23211A">
+  <div style="display:flex">
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:22px;color:#CBF24C">today</span><span style="font-size:11.5px;font-weight:600;color:#CBF24C">Hoy</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">fitness_center</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Máquinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">calendar_view_week</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Rutinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">bar_chart</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ MÁQUINAS v2 ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#7E7869;font-size:12px;font-family:ui-monospace,monospace">Máquinas</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#171511;color:#F4F0E6;font-family:Outfit,sans-serif">
+<div style="flex:1;overflow:auto;min-height:0;display:flex;flex-direction:column">
+  <div style="display:flex;flex-direction:column;gap:3px;padding:14px 22px 4px">
+    <span style="font-size:28px;font-weight:600;letter-spacing:-.4px">Máquinas</span>
+    <span style="font-size:15px;color:#B3AC9D">92 ejercicios en tu gimnasio</span>
+  </div>
+  <div style="margin:14px 22px 0;height:50px;box-sizing:border-box;border-radius:99px;background:#23211A;display:flex;align-items:center;gap:10px;padding:0 18px">
+    <span style="font-family:'Material Symbols Rounded';font-size:19px;color:#7E7869">search</span>
+    <span style="font-size:15px;color:#7E7869">Buscar máquina o músculo</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:12px 22px 0;overflow:hidden;flex-shrink:0">
+    <span style="background:#CBF24C;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:600;color:#191D07;white-space:nowrap">Todo</span>
+    <span style="background:#23211A;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:500;color:#B3AC9D;white-space:nowrap">Pecho</span>
+    <span style="background:#23211A;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:500;color:#B3AC9D;white-space:nowrap">Espalda</span>
+    <span style="background:#23211A;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:500;color:#B3AC9D;white-space:nowrap">Hombro</span>
+    <span style="background:#23211A;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:500;color:#B3AC9D;white-space:nowrap">Bíceps</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px 22px 22px;flex-shrink:0">
+    <div style="border-radius:24px;background:#211E18;overflow:hidden">
+      <div style="height:118px"><img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:600;line-height:20px;min-height:40px">Press de pecho en máquina</span>
+        <span style="font-size:13px;color:#EFA588">Pecho · Máquina</span>
+      </div>
+    </div>
+    <div style="border-radius:24px;background:#211E18;overflow:hidden">
+      <div style="height:118px"><img src="assets/exercises/press_inclinado_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:600;line-height:20px;min-height:40px">Press inclinado en máquina</span>
+        <span style="font-size:13px;color:#EFA588">Pecho · Máquina</span>
+      </div>
+    </div>
+    <div style="border-radius:24px;background:#211E18;overflow:hidden">
+      <div style="height:118px"><img src="assets/exercises/contractor_de_pecho_peck_deck.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:600;line-height:20px;min-height:40px">Contractor de pecho (peck deck)</span>
+        <span style="font-size:13px;color:#EFA588">Pecho · Máquina</span>
+      </div>
+    </div>
+    <div style="border-radius:24px;background:#211E18;overflow:hidden">
+      <div style="height:118px"><img src="assets/exercises/cruce_de_poleas.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:600;line-height:20px;min-height:40px">Cruce de poleas</span>
+        <span style="font-size:13px;color:#EFA588">Pecho · Polea</span>
+      </div>
+    </div>
+    <div style="border-radius:24px;background:#211E18;overflow:hidden">
+      <div style="height:118px"><img src="assets/exercises/cruce_de_poleas_bajas.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:600;line-height:20px;min-height:40px">Cruce de poleas bajas</span>
+        <span style="font-size:13px;color:#EFA588">Pecho · Polea</span>
+      </div>
+    </div>
+    <div style="border-radius:24px;background:#211E18;overflow:hidden">
+      <div style="height:118px"><img src="assets/exercises/aperturas_en_polea_inclinado.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:600;line-height:20px;min-height:40px">Aperturas en polea inclinado</span>
+        <span style="font-size:13px;color:#EFA588">Pecho · Polea</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="background:#171511;padding:10px 16px;border-top:1px solid #23211A">
+  <div style="display:flex">
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">today</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Hoy</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:22px;color:#CBF24C">fitness_center</span><span style="font-size:11.5px;font-weight:600;color:#CBF24C">Máquinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">calendar_view_week</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Rutinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">bar_chart</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ RUTINAS v2 ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#7E7869;font-size:12px;font-family:ui-monospace,monospace">Rutinas</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#171511;color:#F4F0E6;font-family:Outfit,sans-serif">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;padding:14px 22px 4px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:28px;font-weight:600;letter-spacing:-.4px">Rutinas</span>
+      <span style="font-size:15px;color:#B3AC9D">3 planes guardados</span>
+    </div>
+    <span style="width:46px;height:46px;border-radius:99px;background:#CBF24C;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#191D07">add</span></span>
+  </div>
+  <div style="margin:16px 22px 0;border-radius:24px;background:linear-gradient(135deg,#2A2E17,#211E18 62%);border:1px solid rgba(203,242,76,.3);padding:18px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:.4px;color:#CBF24C;background:rgba(203,242,76,.14);border-radius:99px;padding:4px 10px">PLAN ACTIVO</span>
+    </div>
+    <span style="display:block;font-size:20px;font-weight:600;letter-spacing:-.2px;margin-top:10px">Grasa y músculo</span>
+    <span style="display:block;font-size:14px;line-height:20px;color:#B3AC9D;margin-top:4px">Torso y pierna en 4 días. Fuerza primero, cardio al final.</span>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+      <div style="border-radius:18px;background:rgba(23,21,17,.55);display:flex;align-items:center;padding:6px 6px 6px 16px">
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+          <span style="font-size:15px;font-weight:600">Torso A · empuje</span>
+          <span style="font-size:12.5px;color:#B3AC9D">8 ejercicios · 26 series</span>
+        </div>
+        <span style="border-radius:99px;background:#CBF24C;padding:10px 18px;font-size:13px;font-weight:600;color:#191D07">Empezar</span>
+      </div>
+      <div style="border-radius:18px;background:rgba(23,21,17,.55);display:flex;align-items:center;padding:6px 6px 6px 16px">
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+          <span style="font-size:15px;font-weight:600">Pierna A</span>
+          <span style="font-size:12.5px;color:#B3AC9D">7 ejercicios · 22 series</span>
+        </div>
+        <span style="border-radius:99px;background:#23211A;padding:10px 18px;font-size:13px;font-weight:600;color:#F4F0E6">Empezar</span>
+      </div>
+      <div style="border-radius:18px;background:rgba(23,21,17,.55);display:flex;align-items:center;padding:6px 6px 6px 16px">
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+          <span style="font-size:15px;font-weight:600">Torso B · tirón</span>
+          <span style="font-size:12.5px;color:#B3AC9D">8 ejercicios · 24 series</span>
+        </div>
+        <span style="border-radius:99px;background:#23211A;padding:10px 18px;font-size:13px;font-weight:600;color:#F4F0E6">Empezar</span>
+      </div>
+      <div style="border-radius:18px;background:rgba(23,21,17,.55);display:flex;align-items:center;padding:6px 6px 6px 16px">
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+          <span style="font-size:15px;font-weight:600">Pierna B + core</span>
+          <span style="font-size:12.5px;color:#B3AC9D">8 ejercicios · 24 series</span>
+        </div>
+        <span style="border-radius:99px;background:#23211A;padding:10px 18px;font-size:13px;font-weight:600;color:#F4F0E6">Empezar</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin:12px 22px 0;border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center;gap:14px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:17px;font-weight:600">Inicio</span>
+      <span style="font-size:14px;color:#B3AC9D">Primeras 3 semanas · 2 días</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">expand_more</span>
+  </div>
+  <div style="margin:12px 22px 0;border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center;gap:14px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:17px;font-weight:600">Voleibol</span>
+      <span style="font-size:14px;color:#B3AC9D">Mantener la forma · 2 días</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">expand_more</span>
+  </div>
+  <div style="margin:20px 22px 22px;border-radius:24px;background:#23211A;padding:18px;display:flex;align-items:center;gap:14px">
+    <span style="width:46px;height:46px;border-radius:16px;background:rgba(233,192,131,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#E9C083">menu_book</span></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:16px;font-weight:600">Cómo funciona todo</span>
+      <span style="font-size:14px;color:#B3AC9D">Progresión, comida y descanso</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#7E7869">chevron_right</span>
+  </div>
+</div>
+<div style="background:#171511;padding:10px 16px;border-top:1px solid #23211A">
+  <div style="display:flex">
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">today</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Hoy</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">fitness_center</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Máquinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:22px;color:#CBF24C">calendar_view_week</span><span style="font-size:11.5px;font-weight:600;color:#CBF24C">Rutinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">bar_chart</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ PROGRESO v2 ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#7E7869;font-size:12px;font-family:ui-monospace,monospace">Progreso</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#171511;color:#F4F0E6;font-family:Outfit,sans-serif">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;padding:14px 22px 4px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:28px;font-weight:600;letter-spacing:-.4px">Progreso</span>
+      <span style="font-size:15px;color:#B3AC9D">Alejandro · 181 cm · 74,6 kg</span>
+    </div>
+    <span style="width:46px;height:46px;border-radius:99px;background:#23211A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#B3AC9D">ios_share</span></span>
+  </div>
+  <div style="display:flex;gap:10px;padding:16px 22px 0">
+    <div style="flex:1;border-radius:20px;background:#211E18;padding:14px;display:flex;flex-direction:column;gap:8px">
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#CBF24C">exercise</span>
+      <div style="display:flex;flex-direction:column;gap:1px"><span style="font-size:20px;font-weight:600;letter-spacing:-.3px">128.400 kg</span><span style="font-size:12.5px;color:#B3AC9D">Peso total movido</span></div>
+    </div>
+    <div style="flex:1;border-radius:20px;background:#211E18;padding:14px;display:flex;flex-direction:column;gap:8px">
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#E9C083">local_fire_department</span>
+      <div style="display:flex;flex-direction:column;gap:1px"><span style="font-size:20px;font-weight:600;letter-spacing:-.3px">34 días</span><span style="font-size:12.5px;color:#B3AC9D">Entrenados</span></div>
+    </div>
+    <div style="flex:1;border-radius:20px;background:#211E18;padding:14px;display:flex;flex-direction:column;gap:8px">
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#E795B1">event_available</span>
+      <div style="display:flex;flex-direction:column;gap:1px"><span style="font-size:20px;font-weight:600;letter-spacing:-.3px">9 ses.</span><span style="font-size:12.5px;color:#B3AC9D">Este mes</span></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;padding:26px 22px 12px">
+    <span style="flex:1;font-size:17px;font-weight:600">Peso corporal</span>
+    <span style="display:flex;align-items:center;gap:6px;border-radius:99px;background:#CBF24C;padding:8px 14px"><span style="font-family:'Material Symbols Rounded';font-size:15px;color:#191D07">add</span><span style="font-size:12.5px;font-weight:600;color:#191D07">Registrar</span></span>
+  </div>
+  <div style="margin:0 22px;border-radius:24px;background:#211E18;padding:18px">
+    <div style="display:flex;align-items:flex-end">
+      <span style="font-size:32px;font-weight:600;letter-spacing:-.6px;line-height:36px">74,6 kg</span>
+      <span style="flex:1"></span>
+      <span style="font-size:13px;font-weight:600;color:#CBF24C;background:rgba(203,242,76,.12);border-radius:99px;padding:4px 10px;margin-bottom:4px">−1,2 kg</span>
+    </div>
+    <svg viewBox="0 0 340 110" style="width:100%;height:110px;margin-top:14px">
+      <defs><linearGradient id="wg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(203,242,76,.25)"></stop><stop offset="1" stop-color="rgba(203,242,76,0)"></stop></linearGradient></defs>
+      <path d="M0,16 C30,14 40,22 68,24 C96,26 106,38 136,42 C166,46 176,52 204,56 C232,60 244,74 272,80 C300,86 320,90 340,92 L340,110 L0,110 Z" fill="url(#wg2)"></path>
+      <path d="M0,16 C30,14 40,22 68,24 C96,26 106,38 136,42 C166,46 176,52 204,56 C232,60 244,74 272,80 C300,86 320,90 340,92" fill="none" stroke="#CBF24C" stroke-width="3" stroke-linecap="round"></path>
+      <circle cx="340" cy="92" r="5" fill="#CBF24C"></circle>
+    </svg>
+    <div style="display:flex;justify-content:space-between;margin-top:6px">
+      <span style="font-size:12px;color:#7E7869">30 may</span>
+      <span style="font-size:12px;color:#7E7869">24 jul</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;padding:26px 22px 12px">
+    <span style="flex:1;font-size:17px;font-weight:600">Peso movido por semana</span>
+  </div>
+  <div style="margin:0 22px;border-radius:24px;background:#211E18;padding:18px">
+    <span style="font-size:15px;color:#B3AC9D">Esta semana llevas <span style="color:#F4F0E6;font-weight:600">18.320 kg</span></span>
+    <div style="display:flex;align-items:flex-end;gap:10px;height:130px;margin-top:16px">
+      <span style="flex:1;height:34%;border-radius:10px;background:#38391F"></span>
+      <span style="flex:1;height:42%;border-radius:10px;background:#43451F"></span>
+      <span style="flex:1;height:38%;border-radius:10px;background:#43451F"></span>
+      <span style="flex:1;height:56%;border-radius:10px;background:#5A611F"></span>
+      <span style="flex:1;height:49%;border-radius:10px;background:#5A611F"></span>
+      <span style="flex:1;height:64%;border-radius:10px;background:#7E8B23"></span>
+      <span style="flex:1;height:71%;border-radius:10px;background:#A3BC33"></span>
+      <span style="flex:1;height:88%;border-radius:10px;background:#CBF24C"></span>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <span style="flex:1;text-align:center;font-size:12px;color:#7E7869">8</span><span style="flex:1;text-align:center;font-size:12px;color:#7E7869">15</span><span style="flex:1;text-align:center;font-size:12px;color:#7E7869">22</span><span style="flex:1;text-align:center;font-size:12px;color:#7E7869">29</span><span style="flex:1;text-align:center;font-size:12px;color:#7E7869">6</span><span style="flex:1;text-align:center;font-size:12px;color:#7E7869">13</span><span style="flex:1;text-align:center;font-size:12px;color:#7E7869">20</span><span style="flex:1;text-align:center;font-size:12px;color:#CBF24C;font-weight:600">27</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;padding:26px 22px 12px">
+    <span style="flex:1;font-size:17px;font-weight:600">Récords personales</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:0 22px">
+    <div style="border-radius:20px;background:#211E18;display:flex;align-items:center;gap:13px;padding:12px 14px">
+      <div style="width:46px;height:46px;border-radius:14px;overflow:hidden;flex-shrink:0"><img src="assets/exercises/prensa_de_piernas.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:15px;font-weight:600">Prensa de piernas</span><span style="font-size:13px;color:#B3AC9D">10 repeticiones</span></div>
+      <span style="font-size:17px;font-weight:600;color:#E795B1">110 kg</span>
+    </div>
+    <div style="border-radius:20px;background:#211E18;display:flex;align-items:center;gap:13px;padding:12px 14px">
+      <div style="width:46px;height:46px;border-radius:14px;overflow:hidden;flex-shrink:0"><img src="assets/exercises/peso_muerto_rumano.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:15px;font-weight:600">Peso muerto rumano</span><span style="font-size:13px;color:#B3AC9D">10 repeticiones</span></div>
+      <span style="font-size:17px;font-weight:600;color:#E795B1">70 kg</span>
+    </div>
+    <div style="border-radius:20px;background:#211E18;display:flex;align-items:center;gap:13px;padding:12px 14px">
+      <div style="width:46px;height:46px;border-radius:14px;overflow:hidden;flex-shrink:0"><img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:15px;font-weight:600">Press de pecho en máquina</span><span style="font-size:13px;color:#B3AC9D">8 repeticiones</span></div>
+      <span style="font-size:17px;font-weight:600;color:#EFA588">52,5 kg</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;padding:20px 22px 22px">
+    <div style="flex:1;border-radius:20px;background:#23211A;padding:16px;display:flex;align-items:center;gap:12px">
+      <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#B3AC9D">history</span>
+      <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14.5px;font-weight:600">Historial</span><span style="font-size:12.5px;color:#B3AC9D">34 sesiones</span></div>
+    </div>
+    <div style="flex:1;border-radius:20px;background:#23211A;padding:16px;display:flex;align-items:center;gap:12px">
+      <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#B3AC9D">map</span>
+      <div style="flex:1;display:flex;flex-direction:column"><span style="font-size:14.5px;font-weight:600">Tu plan</span><span style="font-size:12.5px;color:#B3AC9D">Fase 0 · sem. 2</span></div>
+    </div>
+  </div>
+</div>
+<div style="background:#171511;padding:10px 16px;border-top:1px solid #23211A">
+  <div style="display:flex">
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">today</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Hoy</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">fitness_center</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Máquinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">calendar_view_week</span><span style="font-size:11.5px;font-weight:500;color:#7E7869">Rutinas</span></span>
+    <span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:22px;color:#CBF24C">bar_chart</span><span style="font-size:11.5px;font-weight:600;color:#CBF24C">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ TU PLAN v2 ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#7E7869;font-size:12px;font-family:ui-monospace,monospace">Tu plan</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#171511;color:#F4F0E6;font-family:Outfit,sans-serif">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;gap:6px;padding:12px 14px 4px">
+    <span style="width:40px;height:40px;border-radius:99px;background:#23211A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#B3AC9D">arrow_back</span></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px;padding-left:6px">
+      <span style="font-size:22px;font-weight:600;letter-spacing:-.3px">Tu plan</span>
+      <span style="font-size:14px;color:#B3AC9D">Perder grasa, ganar músculo</span>
+    </div>
+  </div>
+  <div style="margin:14px 22px 0;border-radius:24px;background:linear-gradient(135deg,#2A2E17,#211E18 62%);border:1px solid rgba(203,242,76,.3);padding:18px">
+    <span style="font-size:12px;font-weight:600;letter-spacing:.4px;color:#CBF24C;background:rgba(203,242,76,.14);border-radius:99px;padding:4px 10px">FASE ACTUAL</span>
+    <span style="display:block;font-size:20px;font-weight:600;letter-spacing:-.2px;margin-top:10px">Fase 0 · Adaptación</span>
+    <span style="display:block;font-size:14px;color:#B3AC9D;margin-top:3px">Semana 2 de 3 · 2 días por semana</span>
+    <div style="display:flex;gap:6px;margin-top:16px">
+      <span style="flex:1;height:8px;border-radius:99px;background:#CBF24C"></span>
+      <span style="flex:1;height:8px;border-radius:99px;background:#CBF24C"></span>
+      <span style="flex:1;height:8px;border-radius:99px;background:rgba(203,242,76,.18)"></span>
+    </div>
+    <span style="display:block;font-size:13px;color:#B3AC9D;margin-top:10px">Al terminar la semana 3 pasas a la fase 1.</span>
+  </div>
+  <div style="padding:24px 22px 12px"><span style="font-size:17px;font-weight:600">Las que te tocan ahora</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:0 22px">
+    <div style="border-radius:20px;background:#211E18;display:flex;align-items:center;gap:13px;padding:8px 8px 8px 16px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+        <span style="font-size:15px;font-weight:600">Inicio · Día A</span>
+        <span style="font-size:13px;color:#B3AC9D">6 ejercicios · 40 min aprox.</span>
+      </div>
+      <span style="width:44px;height:44px;border-radius:99px;background:#CBF24C;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#191D07">play_arrow</span></span>
+    </div>
+    <div style="border-radius:20px;background:#211E18;display:flex;align-items:center;gap:13px;padding:8px 8px 8px 16px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+        <span style="font-size:15px;font-weight:600">Inicio · Día B</span>
+        <span style="font-size:13px;color:#B3AC9D">6 ejercicios · 40 min aprox.</span>
+      </div>
+      <span style="width:44px;height:44px;border-radius:99px;background:#23211A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#B3AC9D">play_arrow</span></span>
+    </div>
+  </div>
+  <div style="padding:26px 22px 12px"><span style="font-size:17px;font-weight:600">El plan al detalle</span></div>
+  <div style="margin:0 22px;border-radius:24px;background:#211E18;border:1px solid rgba(203,242,76,.3)">
+    <div style="padding:18px;display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:16px;font-weight:600">Fase 0 · Adaptación</span>
+        <span style="font-size:13.5px;color:#B3AC9D">Semanas 1 a 3 · 2 días por semana</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869;transform:rotate(180deg)">expand_more</span>
+    </div>
+    <div style="padding:0 18px 18px;display:flex;flex-direction:column">
+      <div style="border-radius:16px;background:rgba(203,242,76,.08);padding:14px;display:flex;gap:11px">
+        <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#CBF24C;flex-shrink:0">lightbulb</span>
+        <span style="font-size:14px;line-height:20px;color:#D8D2C4">Termina cada serie sintiendo que podrías hacer 4 o 5 más. Si acabas apretando los dientes, te has pasado.</span>
+      </div>
+      <span style="font-size:15px;font-weight:600;margin-top:16px">Por qué se entrena tan suave</span>
+      <span style="font-size:14.5px;line-height:22px;color:#B3AC9D;margin-top:5px">Las agujetas fuertes no vienen de entrenar duro, vienen de hacer algo nuevo para el músculo. Basta una sesión suave para que el cuerpo quede protegido las semanas siguientes.</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:10px 22px 22px">
+    <div style="border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:16px;font-weight:600">Fase 1 · Recomposición</span>
+        <span style="font-size:13.5px;color:#B3AC9D">Semana 4 en adelante · 4 días</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">expand_more</span>
+    </div>
+    <div style="border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:16px;font-weight:600">Cómo subir de peso</span>
+        <span style="font-size:13.5px;color:#B3AC9D">Doble progresión</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">expand_more</span>
+    </div>
+    <div style="border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:16px;font-weight:600">Comida y descanso</span>
+        <span style="font-size:13.5px;color:#B3AC9D">Lo que pasa fuera del gimnasio</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">expand_more</span>
+    </div>
+    <div style="border-radius:24px;background:#211E18;padding:18px;display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:16px;font-weight:600">Qué esperar</span>
+        <span style="font-size:13.5px;color:#B3AC9D">Mes a mes</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7E7869">expand_more</span>
+    </div>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+</div>
+</section>
+<section id="1a" style="display:flex;flex-direction:column;gap:20px;padding:48px;align-items:flex-start">
+<div style="display:flex;align-items:center;gap:12px">
+  <span style="background:#CBF24C;color:#11140A;font-weight:700;font-size:13px;border-radius:8px;padding:4px 9px">1a</span>
+  <span style="color:#9BA3AF;font-size:14px;font-family:ui-monospace,monospace">AppGym — UI actual (recreación fiel del código)</span>
+</div>
+<div style="display:flex;gap:44px;align-items:flex-start">
+
+<!-- ============ HOY ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Hoy — TodayScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;padding:12px 20px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">HOY</span>
+      <span style="font-size:27px;font-weight:600;letter-spacing:-.7px;line-height:32px">Torso A · empuje</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(203,242,76,.13);border-radius:14px;padding:9px 12px">
+      <span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:15px;color:#CBF24C">schedule</span>
+      <div style="display:flex;flex-direction:column">
+        <span style="font-size:12px;font-weight:500;letter-spacing:.2px;color:#CBF24C">1 h 12 min</span>
+        <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">18:05 – 19:17</span>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;padding:0 16px">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">J</span><span style="font-size:15px;font-weight:600;color:#9BA3AF">23</span><span style="width:4px;height:4px;border-radius:50%"></span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">V</span><span style="font-size:15px;font-weight:600;color:#9BA3AF">24</span><span style="width:4px;height:4px;border-radius:50%"></span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">S</span><span style="font-size:15px;font-weight:600;color:#9BA3AF">25</span><span style="width:4px;height:4px;border-radius:50%"></span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">D</span><span style="font-size:15px;font-weight:600;color:#9BA3AF">26</span><span style="width:4px;height:4px;border-radius:50%"></span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#CBF24C;border:1px solid #CBF24C;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#11140A">L</span><span style="font-size:15px;font-weight:600;color:#11140A">27</span><span style="width:4px;height:4px;border-radius:50%;background:rgba(17,20,10,.5)"></span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">M</span><span style="font-size:15px;font-weight:600;color:#9BA3AF">28</span><span style="width:4px;height:4px;border-radius:50%"></span>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:10px 0">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">X</span><span style="font-size:15px;font-weight:600;color:#9BA3AF">29</span><span style="width:4px;height:4px;border-radius:50%"></span>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;padding:16px 20px 0">
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#CBF24C"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">6.240</span><span style="font-size:12px;color:#636B78">kg</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Peso movido  +8%</span>
+    </div>
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#5FA8D9"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">12/21</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px">Series</span>
+    </div>
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#DE6E93"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">1 h 12 min</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px">En el gym</span>
+    </div>
+  </div>
+  <div style="padding:28px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">SESIÓN DE HOY</span></div>
+  <div style="margin:0 20px 6px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0">
+        <img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="Press de pecho" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(232,131,106,.22))"></span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px">Press de pecho en máquina</span>
+        <div style="display:flex;gap:5px">
+          <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">4/4 series</span>
+          <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">1.600 kg</span>
+        </div>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">1</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">50</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">8</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#E8836A;border:1px solid #E8836A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:rgba(0,0,0,.75)">check</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">2</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">50</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">8</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#E8836A;border:1px solid #E8836A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:rgba(0,0,0,.75)">check</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">3</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">52,5</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">8</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#E8836A;border:1px solid #E8836A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:rgba(0,0,0,.75)">check</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">4</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">52,5</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">8</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#E8836A;border:1px solid #E8836A;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:rgba(0,0,0,.75)">check</span></span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:7px">
+      <span style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#191C23;border-radius:12px;padding:10px 0"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#9BA3AF">remove</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Quitar serie</span></span>
+      <span style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#191C23;border-radius:12px;padding:10px 0"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#9BA3AF">add</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Añadir serie</span></span>
+    </div>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0">
+        <img src="assets/exercises/jalon_al_pecho_agarre_ancho.webp" alt="Jalón al pecho" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(95,168,217,.22))"></span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px">Jalón al pecho agarre ancho</span>
+        <div style="display:flex;gap:5px">
+          <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#5FA8D9;background:rgba(95,168,217,.13);border-radius:6px;padding:3px 7px">2/4 series</span>
+          <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">1.100 kg</span>
+        </div>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">1</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">55</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">10</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#5FA8D9;border:1px solid #5FA8D9;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:rgba(0,0,0,.75)">check</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">2</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">55</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">10</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#5FA8D9;border:1px solid #5FA8D9;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:rgba(0,0,0,.75)">check</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">3</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">55</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">10</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#22262F;border:1px solid #1D2129;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:#636B78">check</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:28px;height:28px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#9BA3AF">4</span>
+        <span style="width:84px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">55</span><span style="font-size:10.5px;color:#636B78">kg</span></span>
+        <span style="font-size:15px;color:#636B78">×</span>
+        <span style="width:78px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;align-items:center;justify-content:flex-end;gap:3px"><span style="font-size:15px;font-weight:500">10</span><span style="font-size:10.5px;color:#636B78">rep</span></span>
+        <span style="flex:1"></span>
+        <span style="width:38px;height:38px;border-radius:13px;background:#22262F;border:1px solid #1D2129;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:18px;color:#636B78">check</span></span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:7px">
+      <span style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#191C23;border-radius:12px;padding:10px 0"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#9BA3AF">remove</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Quitar serie</span></span>
+      <span style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#191C23;border-radius:12px;padding:10px 0"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#9BA3AF">add</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Añadir serie</span></span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:14px 20px 20px">
+    <span style="height:52px;border-radius:18px;background:#CBF24C;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#11140A">add</span><span style="font-size:14px;font-weight:600;color:#11140A">Añadir ejercicio suelto</span></span>
+    <div style="display:flex;gap:10px">
+      <span style="flex:1;height:46px;border-radius:15px;background:#191C23;border:1px solid #1D2129;display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#9BA3AF">swap_horiz</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Cambiar de rutina</span></span>
+      <span style="flex:1;height:46px;border-radius:15px;background:#191C23;border:1px solid #1D2129;display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:#9BA3AF">schedule</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Editar horas</span></span>
+    </div>
+  </div>
+</div>
+<div style="background:#090A0D;padding:10px 14px">
+  <div style="display:flex;gap:2px;background:#191C23;border-radius:26px;padding:5px">
+    <span style="flex:1;height:48px;border-radius:21px;background:rgba(203,242,76,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#CBF24C">today</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">Hoy</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">fitness_center</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Máquinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">calendar_view_week</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Rutinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">bar_chart</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ MÁQUINAS ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Máquinas — CatalogScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;padding:8px 20px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">92 EJERCICIOS</span>
+      <span style="font-size:27px;font-weight:600;letter-spacing:-.7px;line-height:32px">Máquinas</span>
+    </div>
+  </div>
+  <div style="margin:6px 20px;height:48px;box-sizing:border-box;border-radius:16px;background:#121419;border:1px solid #1D2129;display:flex;align-items:center;gap:10px;padding:0 14px">
+    <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78">search</span>
+    <span style="font-size:15px;color:#636B78">Buscar máquina o músculo</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:6px 20px 0;overflow:hidden;flex-shrink:0">
+    <span style="background:#CBF24C;border:1px solid #CBF24C;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#11140A;white-space:nowrap">Todo</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Pecho</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Espalda</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Hombro</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Bíceps</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 20px 20px;flex-shrink:0">
+    <div style="border-radius:22px;background:#121419;border:1px solid #1D2129;overflow:hidden">
+      <div style="position:relative;height:112px">
+        <img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,#121419)"></span>
+        <span style="position:absolute;top:10px;left:10px;width:26px;height:3px;border-radius:99px;background:#E8836A"></span>
+      </div>
+      <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:20px;min-height:40px">Press de pecho en máquina</span>
+        <div style="display:flex;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Máquina</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+      </div>
+    </div>
+    <div style="border-radius:22px;background:#121419;border:1px solid #1D2129;overflow:hidden">
+      <div style="position:relative;height:112px">
+        <img src="assets/exercises/press_inclinado_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,#121419)"></span>
+        <span style="position:absolute;top:10px;left:10px;width:26px;height:3px;border-radius:99px;background:#E8836A"></span>
+      </div>
+      <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:20px;min-height:40px">Press inclinado en máquina</span>
+        <div style="display:flex;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Máquina</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+      </div>
+    </div>
+    <div style="border-radius:22px;background:#121419;border:1px solid #1D2129;overflow:hidden">
+      <div style="position:relative;height:112px">
+        <img src="assets/exercises/contractor_de_pecho_peck_deck.webp" alt="" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,#121419)"></span>
+        <span style="position:absolute;top:10px;left:10px;width:26px;height:3px;border-radius:99px;background:#E8836A"></span>
+      </div>
+      <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:20px;min-height:40px">Contractor de pecho (peck deck)</span>
+        <div style="display:flex;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Máquina</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+      </div>
+    </div>
+    <div style="border-radius:22px;background:#121419;border:1px solid #1D2129;overflow:hidden">
+      <div style="position:relative;height:112px">
+        <img src="assets/exercises/cruce_de_poleas.webp" alt="" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,#121419)"></span>
+        <span style="position:absolute;top:10px;left:10px;width:26px;height:3px;border-radius:99px;background:#E8836A"></span>
+      </div>
+      <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:20px;min-height:40px">Cruce de poleas</span>
+        <div style="display:flex;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Polea</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+      </div>
+    </div>
+    <div style="border-radius:22px;background:#121419;border:1px solid #1D2129;overflow:hidden">
+      <div style="position:relative;height:112px">
+        <img src="assets/exercises/cruce_de_poleas_bajas.webp" alt="" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,#121419)"></span>
+        <span style="position:absolute;top:10px;left:10px;width:26px;height:3px;border-radius:99px;background:#E8836A"></span>
+      </div>
+      <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:20px;min-height:40px">Cruce de poleas bajas</span>
+        <div style="display:flex;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Polea</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+      </div>
+    </div>
+    <div style="border-radius:22px;background:#121419;border:1px solid #1D2129;overflow:hidden">
+      <div style="position:relative;height:112px">
+        <img src="assets/exercises/aperturas_en_polea_inclinado.webp" alt="" style="width:100%;height:100%;object-fit:cover">
+        <span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,#121419)"></span>
+        <span style="position:absolute;top:10px;left:10px;width:26px;height:3px;border-radius:99px;background:#E8836A"></span>
+      </div>
+      <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:20px;min-height:40px">Aperturas en polea inclinado</span>
+        <div style="display:flex;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Polea</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="background:#090A0D;padding:10px 14px">
+  <div style="display:flex;gap:2px;background:#191C23;border-radius:26px;padding:5px">
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">today</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Hoy</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;background:rgba(203,242,76,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#CBF24C">fitness_center</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">Máquinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">calendar_view_week</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Rutinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">bar_chart</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ RUTINAS ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Rutinas — RoutinesScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;padding:8px 20px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">TUS PLANES</span>
+      <span style="font-size:27px;font-weight:600;letter-spacing:-.7px;line-height:32px">Rutinas</span>
+    </div>
+    <span style="width:44px;height:44px;border-radius:15px;background:#191C23;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;color:#9BA3AF">add</span></span>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center;gap:14px">
+    <span style="width:4px;height:36px;border-radius:99px;background:#E0A94E"></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Inicio</span>
+      <span style="font-size:13.5px;color:#636B78">Primeras 3 semanas · 2 días</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78">expand_more</span>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center;gap:14px">
+    <span style="width:4px;height:36px;border-radius:99px;background:#5FA8D9"></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Voleibol</span>
+      <span style="font-size:13.5px;color:#636B78">Mantener la forma · 2 días</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78">expand_more</span>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid rgba(203,242,76,.35)">
+    <div style="padding:16px;display:flex;align-items:center;gap:14px">
+      <span style="width:4px;height:36px;border-radius:99px;background:#CBF24C"></span>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Grasa y músculo</span>
+        <span style="font-size:13.5px;color:#636B78">El plan principal · 4 días</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78;transform:rotate(180deg)">expand_more</span>
+    </div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column">
+      <span style="font-size:13.5px;line-height:19px;color:#9BA3AF">Torso y pierna repartidos en cuatro días. Fuerza primero y cardio al final: si haces cardio antes llegas cansado a lo que construye músculo.</span>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+        <div style="border-radius:16px;background:#191C23;display:flex;align-items:center">
+          <div style="flex:1;padding:12px 0 12px 14px;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:15px;font-weight:500">Torso A · empuje</span>
+            <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">8 ejercicios · 26 series</span>
+          </div>
+          <span style="margin:8px;border-radius:11px;background:rgba(232,131,106,.16);padding:8px 13px;font-size:12px;font-weight:500;color:#E8836A">Empezar</span>
+        </div>
+        <div style="border-radius:16px;background:#191C23;display:flex;align-items:center">
+          <div style="flex:1;padding:12px 0 12px 14px;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:15px;font-weight:500">Pierna A</span>
+            <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">7 ejercicios · 22 series</span>
+          </div>
+          <span style="margin:8px;border-radius:11px;background:rgba(222,110,147,.16);padding:8px 13px;font-size:12px;font-weight:500;color:#DE6E93">Empezar</span>
+        </div>
+        <div style="border-radius:16px;background:#191C23;display:flex;align-items:center">
+          <div style="flex:1;padding:12px 0 12px 14px;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:15px;font-weight:500">Torso B · tirón</span>
+            <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">8 ejercicios · 24 series</span>
+          </div>
+          <span style="margin:8px;border-radius:11px;background:rgba(95,168,217,.16);padding:8px 13px;font-size:12px;font-weight:500;color:#5FA8D9">Empezar</span>
+        </div>
+        <div style="border-radius:16px;background:#191C23;display:flex;align-items:center">
+          <div style="flex:1;padding:12px 0 12px 14px;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:15px;font-weight:500">Pierna B + core</span>
+            <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">8 ejercicios · 24 series</span>
+          </div>
+          <span style="margin:8px;border-radius:11px;background:rgba(232,89,110,.16);padding:8px 13px;font-size:12px;font-weight:500;color:#E8596E">Empezar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin:16px 20px 0;border-radius:18px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center;gap:12px">
+    <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78">menu_book</span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:15px;font-weight:500">Cómo funciona todo</span>
+      <span style="font-size:13.5px;color:#636B78">Progresión, comida, descanso y qué esperar</span>
+    </div>
+  </div>
+</div>
+<div style="background:#090A0D;padding:10px 14px">
+  <div style="display:flex;gap:2px;background:#191C23;border-radius:26px;padding:5px">
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">today</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Hoy</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">fitness_center</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Máquinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;background:rgba(203,242,76,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#CBF24C">calendar_view_week</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">Rutinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">bar_chart</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ PROGRESO ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Progreso — ProgressScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;padding:8px 20px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">TU SEGUIMIENTO</span>
+      <span style="font-size:27px;font-weight:600;letter-spacing:-.7px;line-height:32px">Progreso</span>
+    </div>
+    <span style="display:flex;align-items:center;gap:6px;border-radius:99px;background:#22262F;padding:9px 14px"><span style="font-family:'Material Symbols Rounded';font-size:15px;color:#9BA3AF">ios_share</span><span style="font-size:12px;font-weight:500;color:#9BA3AF">Informe</span></span>
+  </div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center;gap:14px">
+    <span style="width:48px;height:48px;border-radius:16px;background:rgba(203,242,76,.15);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#CBF24C">A</span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Alejandro</span>
+      <span style="font-size:13.5px;color:#636B78">181 cm · 74,6 kg</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78">edit</span>
+  </div>
+  <div style="display:flex;align-items:center;padding:28px 20px 10px">
+    <span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">PESO CORPORAL</span>
+    <span style="display:flex;align-items:center;gap:5px;border-radius:99px;background:rgba(203,242,76,.14);padding:5px 11px"><span style="font-family:'Material Symbols Rounded';font-size:14px;color:#CBF24C">add</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">Registrar</span></span>
+  </div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px">
+    <div style="display:flex;align-items:flex-end">
+      <span style="font-size:34px;font-weight:700;letter-spacing:-1px;line-height:38px">74,6</span>
+      <span style="font-size:13.5px;color:#636B78;margin:0 0 5px 4px">kg</span>
+      <span style="flex:1"></span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px;margin-bottom:5px">−1,2 kg</span>
+    </div>
+    <svg viewBox="0 0 340 118" style="width:100%;height:118px;margin-top:14px">
+      <defs><linearGradient id="wg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(203,242,76,.28)"></stop><stop offset="1" stop-color="rgba(203,242,76,0)"></stop></linearGradient></defs>
+      <path d="M0,18 C30,16 40,24 68,26 C96,28 106,40 136,44 C166,48 176,56 204,60 C232,64 244,80 272,86 C300,92 320,96 340,98 L340,118 L0,118 Z" fill="url(#wg1)"></path>
+      <path d="M0,18 C30,16 40,24 68,26 C96,28 106,40 136,44 C166,48 176,56 204,60 C232,64 244,80 272,86 C300,92 320,96 340,98" fill="none" stroke="#CBF24C" stroke-width="2.6"></path>
+      <circle cx="340" cy="98" r="4.5" fill="#CBF24C"></circle><circle cx="340" cy="98" r="1.9" fill="rgba(0,0,0,.85)"></circle>
+    </svg>
+    <div style="display:flex;justify-content:space-between;margin-top:4px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">30 may</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">24 jul</span>
+    </div>
+  </div>
+  <div style="padding:28px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">ENTRENAMIENTO</span></div>
+  <div style="display:flex;gap:10px;padding:0 20px">
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#CBF24C"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">128.400</span><span style="font-size:12px;color:#636B78">kg</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Peso total movido</span>
+    </div>
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#5FA8D9"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">34</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Días entrenados</span>
+    </div>
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#DE6E93"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">9</span><span style="font-size:12px;color:#636B78">ses.</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px">Este mes</span>
+    </div>
+  </div>
+  <div style="padding:28px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">PESO MOVIDO POR SEMANA</span></div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px">
+    <div style="display:flex;align-items:flex-end">
+      <span style="font-size:34px;font-weight:700;letter-spacing:-1px;line-height:38px">18.320</span>
+      <span style="font-size:13.5px;color:#636B78;margin:0 0 5px 4px">kg esta semana</span>
+    </div>
+    <div style="display:flex;gap:9px;height:148px;margin-top:16px;border-bottom:1px solid #1D2129">
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:34%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:42%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:38%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:56%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:49%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:64%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:71%;border-radius:8px;background:linear-gradient(rgba(203,242,76,.55),rgba(203,242,76,.28))"></span></div>
+      <div style="flex:1;position:relative;border-radius:8px;background:rgba(29,33,41,.55)"><span style="position:absolute;left:0;right:0;bottom:0;height:88%;border-radius:8px;background:linear-gradient(#CBF24C,rgba(203,242,76,.62))"></span></div>
+    </div>
+    <div style="display:flex;margin-top:8px">
+      <span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">8</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">15</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">22</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">29</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">6</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">13</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">20</span><span style="flex:1;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">27</span>
+    </div>
+  </div>
+  <div style="padding:28px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">LO QUE MÁS TRABAJAS</span></div>
+  <div style="display:flex;flex-direction:column;padding:0 20px">
+    <div style="display:flex;flex-direction:column;padding:8px 0">
+      <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:15px;font-weight:500">Prensa de piernas</span><span style="font-size:15px;font-weight:500;color:#DE6E93">21.300 kg</span></div>
+      <div style="height:6px;border-radius:99px;background:#22262F;margin-top:7px;overflow:hidden"><span style="display:block;height:6px;width:100%;border-radius:99px;background:#DE6E93"></span></div>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;margin-top:5px">96 series registradas</span>
+    </div>
+    <div style="display:flex;flex-direction:column;padding:8px 0">
+      <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:15px;font-weight:500">Press de pecho en máquina</span><span style="font-size:15px;font-weight:500;color:#E8836A">15.900 kg</span></div>
+      <div style="height:6px;border-radius:99px;background:#22262F;margin-top:7px;overflow:hidden"><span style="display:block;height:6px;width:75%;border-radius:99px;background:#E8836A"></span></div>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;margin-top:5px">88 series registradas</span>
+    </div>
+    <div style="display:flex;flex-direction:column;padding:8px 0">
+      <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:15px;font-weight:500">Jalón al pecho agarre ancho</span><span style="font-size:15px;font-weight:500;color:#5FA8D9">12.450 kg</span></div>
+      <div style="height:6px;border-radius:99px;background:#22262F;margin-top:7px;overflow:hidden"><span style="display:block;height:6px;width:58%;border-radius:99px;background:#5FA8D9"></span></div>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;margin-top:5px">84 series registradas</span>
+    </div>
+  </div>
+  <div style="padding:28px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">RÉCORDS PERSONALES</span></div>
+  <div style="display:flex;flex-direction:column;padding:0 20px 8px">
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+      <div style="width:42px;height:42px;border-radius:10px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/prensa_de_piernas.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(222,110,147,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">Prensa de piernas</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">10 repeticiones</span></div>
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px;color:#DE6E93">110 kg</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+      <div style="width:42px;height:42px;border-radius:10px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/peso_muerto_rumano.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(222,110,147,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">Peso muerto rumano</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">10 repeticiones</span></div>
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px;color:#DE6E93">70 kg</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+      <div style="width:42px;height:42px;border-radius:10px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(232,131,106,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">Press de pecho en máquina</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">8 repeticiones</span></div>
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px;color:#E8836A">52,5 kg</span>
+    </div>
+  </div>
+  <div style="margin:12px 20px 20px;border-radius:18px;background:#22262F;padding:18px;display:flex;align-items:center">
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:15px;font-weight:500">Historial completo</span>
+      <span style="font-size:13.5px;color:#636B78">34 sesiones registradas</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#9BA3AF">chevron_right</span>
+  </div>
+</div>
+<div style="background:#090A0D;padding:10px 14px">
+  <div style="display:flex;gap:2px;background:#191C23;border-radius:26px;padding:5px">
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">today</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Hoy</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">fitness_center</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Máquinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#636B78">calendar_view_week</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Rutinas</span></span>
+    <span style="flex:1;height:48px;border-radius:21px;background:rgba(203,242,76,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:19px;color:#CBF24C">bar_chart</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">Progreso</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ TU PLAN ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Tu plan — PlanScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;gap:4px;padding:8px 12px">
+    <span style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:#9BA3AF">arrow_back</span></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C">PERDER GRASA · GANAR MÚSCULO</span>
+      <span style="font-size:27px;font-weight:600;letter-spacing:-.7px;line-height:32px">Tu plan</span>
+    </div>
+  </div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;padding:16px">
+    <div style="display:flex;align-items:center;gap:13px">
+      <span style="width:4px;height:30px;border-radius:99px;background:#CBF24C"></span>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Fase 0 · Adaptación</span>
+        <span style="font-size:13.5px;color:#636B78">Semana 2 de 3 · 2 días por semana</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:5px;margin-top:14px">
+      <span style="flex:1;height:5px;border-radius:99px;background:#CBF24C"></span>
+      <span style="flex:1;height:5px;border-radius:99px;background:#CBF24C"></span>
+      <span style="flex:1;height:5px;border-radius:99px;background:#22262F"></span>
+    </div>
+    <span style="display:block;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;margin-top:9px">Al terminar la semana 3 pasas a la fase 1.</span>
+  </div>
+  <div style="padding:24px 20px 6px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">LAS QUE TE TOCAN AHORA</span></div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:0 20px">
+    <div style="border-radius:16px;background:#121419;display:flex;align-items:center;gap:12px;padding:13px 14px">
+      <span style="width:26px;height:26px;border-radius:9px;background:rgba(224,169,78,.16);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#E0A94E">1</span>
+      <span style="flex:1;font-size:15px;font-weight:500">Inicio · Día A</span>
+      <span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:17px;color:#636B78">play_arrow</span>
+    </div>
+    <div style="border-radius:16px;background:#121419;display:flex;align-items:center;gap:12px;padding:13px 14px">
+      <span style="width:26px;height:26px;border-radius:9px;background:rgba(224,169,78,.16);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#E0A94E">2</span>
+      <span style="flex:1;font-size:15px;font-weight:500">Inicio · Día B</span>
+      <span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:17px;color:#636B78">play_arrow</span>
+    </div>
+  </div>
+  <div style="padding:28px 20px 6px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">EL PLAN AL DETALLE</span></div>
+  <div style="margin:5px 20px;border-radius:22px;background:#121419;border:1px solid rgba(203,242,76,.45)">
+    <div style="padding:16px;display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:15px;font-weight:500">Fase 0 · Adaptación</span>
+          <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C;background:rgba(203,242,76,.16);border-radius:99px;padding:2px 7px">AHORA</span>
+        </div>
+        <span style="font-size:13.5px;color:#636B78">Semanas 1 a 3 · 2 días por semana</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78;transform:rotate(180deg)">expand_more</span>
+    </div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column">
+      <div style="border-radius:12px;background:rgba(203,242,76,.09);padding:12px;display:flex;gap:11px">
+        <span style="width:3px;height:34px;border-radius:99px;background:#CBF24C;flex-shrink:0"></span>
+        <span style="font-size:13.5px;line-height:19px;color:#9BA3AF">Termina cada serie sintiendo que podrías hacer 4 o 5 repeticiones más. Si acabas apretando los dientes, te has pasado.</span>
+      </div>
+      <span style="font-size:14px;font-weight:600;margin-top:14px">Por qué se entrena tan suave</span>
+      <span style="font-size:15px;line-height:22px;color:#9BA3AF;margin-top:5px">Las agujetas fuertes no vienen de entrenar duro, vienen de hacer algo nuevo para el músculo. Basta una sesión suave para que el cuerpo quede protegido las semanas siguientes.</span>
+      <span style="height:1px;background:#191C23;margin:11px 0 12px"></span>
+      <span style="font-size:14px;font-weight:600">Cómo progresan las tres semanas</span>
+      <span style="font-size:15px;line-height:22px;color:#9BA3AF;margin-top:5px">Semana 1: dos días, 2 series por ejercicio, peso muy cómodo. Semana 2: sube algo el peso si la primera fue fácil. Semana 3: tres días (A, B, A), 3 series.</span>
+    </div>
+  </div>
+  <div style="margin:5px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:15px;font-weight:500">Fase 1 · Recomposición</span>
+      <span style="font-size:13.5px;color:#636B78">Semana 4 en adelante · 4 días por semana</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78">expand_more</span>
+  </div>
+  <div style="margin:5px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:15px;font-weight:500">Cómo subir de peso</span>
+      <span style="font-size:13.5px;color:#636B78">Doble progresión</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78">expand_more</span>
+  </div>
+  <div style="margin:5px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:15px;font-weight:500">Comida y descanso</span>
+      <span style="font-size:13.5px;color:#636B78">Lo que pasa fuera del gimnasio</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78">expand_more</span>
+  </div>
+  <div style="margin:5px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;align-items:center">
+    <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <span style="font-size:15px;font-weight:500">Qué esperar</span>
+      <span style="font-size:13.5px;color:#636B78">Mes a mes</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#636B78">expand_more</span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ HISTORIAL ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Historial — HistoryScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;gap:4px;padding:8px 12px">
+    <span style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:#9BA3AF">arrow_back</span></span>
+    <span style="font-size:22px;font-weight:600;letter-spacing:-.4px">Historial</span>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px">
+    <div style="display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Lunes, 27 de julio</span>
+        <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Torso A · empuje</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px">7 ejercicios</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px">21 series</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C;background:rgba(203,242,76,.13);border-radius:6px;padding:3px 7px">6.240 kg</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/jalon_al_pecho_agarre_ancho.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/press_de_hombro_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/remo_en_polea_sentado.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/elevacion_lateral_en_polea.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/curl_de_biceps_en_polea.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <span style="width:38px;height:38px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:#9BA3AF">+1</span>
+    </div>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px">
+    <div style="display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Sábado, 25 de julio</span>
+        <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Pierna B + core</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px">8 ejercicios</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px">24 series</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C;background:rgba(203,242,76,.13);border-radius:6px;padding:3px 7px">7.980 kg</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/peso_muerto_rumano.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/curl_femoral_tumbado.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/abductores_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/elevacion_de_gemelos_de_pie.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/crunch_en_maquina.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/bicicleta_estatica.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <span style="width:38px;height:38px;border-radius:9px;background:#22262F;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:#9BA3AF">+2</span>
+    </div>
+  </div>
+  <div style="margin:6px 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px">
+    <div style="display:flex;align-items:center">
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">Jueves, 23 de julio</span>
+        <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">Torso B · tirón</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px">8 ejercicios</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#9BA3AF;background:rgba(155,163,175,.13);border-radius:6px;padding:3px 7px">24 series</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#CBF24C;background:rgba(203,242,76,.13);border-radius:6px;padding:3px 7px">6.850 kg</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/face_pull.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/remo_en_polea_sentado.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/dominadas.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/extension_de_triceps_con_cuerda.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="width:38px;height:38px;border-radius:9px;background:#22262F;overflow:hidden"><img src="assets/exercises/curl_de_biceps_en_polea.webp" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+    </div>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ DETALLE EJERCICIO ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Detalle — ExerciseDetailScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="position:relative;height:250px;margin-top:-40px">
+    <img src="assets/exercises/press_de_pecho_en_maquina.webp" alt="Press de pecho en máquina" style="width:100%;height:100%;object-fit:cover">
+    <span style="position:absolute;inset:0;background:linear-gradient(rgba(9,10,13,.55),rgba(9,10,13,0) 45%,#090A0D)"></span>
+    <span style="position:absolute;top:52px;left:12px;width:34px;height:34px;border-radius:12px;background:rgba(9,10,13,.5);display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:#F3F5F7">arrow_back</span></span>
+  </div>
+  <div style="display:flex;flex-direction:column;padding:0 20px">
+    <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A">PECHO</span>
+    <span style="font-size:27px;font-weight:600;letter-spacing:-.7px;line-height:32px;margin-top:6px">Press de pecho en máquina</span>
+    <span style="font-size:13.5px;color:#636B78;margin-top:4px">Machine Bench Press</span>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Máquina</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Principiante</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;padding:20px 20px 0">
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#E8836A"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">52,5</span><span style="font-size:12px;color:#636B78">kg</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px">Mejor peso</span>
+    </div>
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#9BA3AF"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">8</span><span style="font-size:12px;color:#636B78">reps</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px">Con</span>
+    </div>
+    <div style="flex:1;border-radius:16px;background:#121419;border:1px solid #1D2129;padding:14px;display:flex;flex-direction:column">
+      <span style="width:22px;height:3px;border-radius:99px;background:#9BA3AF"></span>
+      <div style="display:flex;align-items:baseline;gap:3px;margin-top:12px"><span style="font-size:22px;font-weight:600;letter-spacing:-.4px">15.900</span><span style="font-size:12px;color:#636B78">kg</span></div>
+      <span style="font-size:13.5px;color:#9BA3AF;margin-top:2px">Acumulado</span>
+    </div>
+  </div>
+  <div style="padding:26px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">EVOLUCIÓN DEL PESO</span></div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px">
+    <svg viewBox="0 0 340 118" style="width:100%;height:118px">
+      <defs><linearGradient id="eg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(232,131,106,.28)"></stop><stop offset="1" stop-color="rgba(232,131,106,0)"></stop></linearGradient></defs>
+      <path d="M0,100 C28,98 40,92 68,88 C96,84 108,72 136,66 C164,60 176,58 204,52 C232,46 244,38 272,30 C300,22 320,18 340,14 L340,118 L0,118 Z" fill="url(#eg1)"></path>
+      <path d="M0,100 C28,98 40,92 68,88 C96,84 108,72 136,66 C164,60 176,58 204,52 C232,46 244,38 272,30 C300,22 320,18 340,14" fill="none" stroke="#E8836A" stroke-width="2.6"></path>
+      <circle cx="340" cy="14" r="4.5" fill="#E8836A"></circle><circle cx="340" cy="14" r="1.9" fill="rgba(0,0,0,.85)"></circle>
+    </svg>
+    <div style="display:flex;justify-content:space-between;margin-top:6px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">12 jun</span>
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">27 jul</span>
+    </div>
+  </div>
+  <div style="padding:26px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">MÚSCULOS IMPLICADOS</span></div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">PRINCIPALES</span>
+      <div style="display:flex;gap:6px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#E8836A;background:rgba(232,131,106,.13);border-radius:6px;padding:3px 7px">Pecho</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">SECUNDARIOS</span>
+      <div style="display:flex;gap:6px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Hombros</span><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78;background:rgba(99,107,120,.13);border-radius:6px;padding:3px 7px">Tríceps</span></div>
+    </div>
+  </div>
+  <div style="padding:26px 20px 10px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">ÚLTIMAS SESIONES</span></div>
+  <div style="display:flex;flex-direction:column;padding:0 20px">
+    <div style="display:flex;align-items:center;padding:9px 0"><span style="flex:1;font-size:15px;color:#9BA3AF">27 jul</span><span style="font-size:15px;font-weight:500">52,5 kg</span></div>
+    <div style="display:flex;align-items:center;padding:9px 0"><span style="flex:1;font-size:15px;color:#9BA3AF">22 jul</span><span style="font-size:15px;font-weight:500">50 kg</span></div>
+    <div style="display:flex;align-items:center;padding:9px 0"><span style="flex:1;font-size:15px;color:#9BA3AF">17 jul</span><span style="font-size:15px;font-weight:500">50 kg</span></div>
+  </div>
+  <div style="padding:24px 20px 20px">
+    <span style="height:52px;border-radius:18px;background:#CBF24C;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#11140A">add</span><span style="font-size:14px;font-weight:600;color:#11140A">Añadir a la sesión de hoy</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ DETALLE RUTINA ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Detalle rutina — RoutineDetailScreen.kt</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0">
+  <div style="display:flex;align-items:center;gap:4px;padding:8px 12px">
+    <span style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:#9BA3AF">arrow_back</span></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#DE6E93">DÍA 2</span>
+      <span style="font-size:22px;font-weight:600;letter-spacing:-.4px">Pierna A</span>
+    </div>
+    <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+  </div>
+  <div style="padding:10px 20px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">7 EJERCICIOS · 22 SERIES</span></div>
+  <div style="margin:0 20px 6px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/prensa_de_piernas.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(222,110,147,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:15px;font-weight:500">Prensa de piernas</span>
+        <span style="font-size:13.5px;color:#636B78">Pierna · descanso 150s</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">SERIES</span><span style="width:76px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;justify-content:flex-end"><span style="font-size:15px;font-weight:500">4</span></span></div>
+      <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">REPS</span><span style="width:76px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;justify-content:flex-end"><span style="font-size:15px;font-weight:500">10</span></span></div>
+      <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">PESO KG</span><span style="width:88px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;justify-content:flex-end"><span style="font-size:15px;font-weight:500">80</span></span></div>
+    </div>
+    <div style="margin-top:12px;border-radius:12px;background:rgba(222,110,147,.09);padding:11px;display:flex;gap:10px">
+      <span style="width:3px;height:16px;border-radius:99px;background:#DE6E93;flex-shrink:0"></span>
+      <span style="font-size:13.5px;line-height:19px;color:#9BA3AF">Baja controlado 3 segundos, sube con intención.</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">60s</span>
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">90s</span>
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">120s</span>
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">180s</span>
+    </div>
+  </div>
+  <div style="margin:0 20px;border-radius:22px;background:#121419;border:1px solid #1D2129;padding:14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/curl_femoral_tumbado.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(222,110,147,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:15px;font-weight:500">Curl femoral tumbado</span>
+        <span style="font-size:13.5px;color:#636B78">Pierna · descanso 90s</span>
+      </div>
+      <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78;padding:8px">delete</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">SERIES</span><span style="width:76px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;justify-content:flex-end"><span style="font-size:15px;font-weight:500">4</span></span></div>
+      <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">REPS</span><span style="width:76px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;justify-content:flex-end"><span style="font-size:15px;font-weight:500">12</span></span></div>
+      <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">PESO KG</span><span style="width:88px;box-sizing:border-box;background:#22262F;border:1px solid #1D2129;border-radius:10px;padding:9px 8px;display:flex;justify-content:flex-end"><span style="font-size:15px;font-weight:500">35</span></span></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">60s</span>
+      <span style="border-radius:99px;background:rgba(222,110,147,.18);padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#DE6E93">90s</span>
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">120s</span>
+      <span style="border-radius:99px;background:#191C23;padding:6px 11px;font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">180s</span>
+    </div>
+  </div>
+</div>
+<div style="display:flex;gap:10px;padding:20px;background:#090A0D">
+  <span style="flex:1;height:52px;border-radius:18px;background:#CBF24C;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#11140A">add</span><span style="font-size:14px;font-weight:600;color:#11140A">Añadir ejercicio</span></span>
+  <span style="width:52px;height:52px;border-radius:18px;background:#191C23;border:1px solid #1D2129;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:20px;color:#9BA3AF">play_arrow</span></span>
+</div>
+</div>
+</x-import>
+</div>
+
+<!-- ============ SELECTOR ============ -->
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="color:#636B78;font-size:12px;font-family:ui-monospace,monospace">Selector — PickerScreen (CatalogScreen.kt)</span>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" dark="{{ true }}" hint-size="428px,892px">
+<div style="height:100%;display:flex;flex-direction:column;background:#090A0D;color:#F3F5F7">
+<div style="flex:1;overflow:auto;min-height:0;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;gap:4px;padding:8px 12px">
+    <span style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:#9BA3AF">arrow_back</span></span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+      <span style="font-size:10.5px;font-weight:600;letter-spacing:.9px;color:#636B78">AÑADIR A LA SESIÓN</span>
+      <span style="font-size:18px;font-weight:600;letter-spacing:-.2px">2 seleccionados</span>
+    </div>
+  </div>
+  <div style="margin:6px 20px;height:48px;box-sizing:border-box;border-radius:16px;background:#121419;border:1px solid #1D2129;display:flex;align-items:center;gap:10px;padding:0 14px">
+    <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#636B78">search</span>
+    <span style="font-size:15px;color:#636B78">Buscar máquina o músculo</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:6px 20px 10px;overflow:hidden">
+    <span style="background:#CBF24C;border:1px solid #CBF24C;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#11140A;white-space:nowrap">Todo</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Pecho</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Espalda</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Hombro</span>
+    <span style="background:#191C23;border:1px solid #2A2F39;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:500;color:#9BA3AF;white-space:nowrap">Bíceps</span>
+  </div>
+  <div style="flex:1;overflow:auto;min-height:0">
+    <div style="display:flex;align-items:center;gap:14px;padding:8px 20px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/face_pull.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(158,134,217,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:500">Face pull</span><span style="font-size:13.5px;color:#636B78">Hombro · Polea</span></div>
+      <span style="width:26px;height:26px;border-radius:50%;background:#9E86D9;border:1.5px solid #9E86D9;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:15px;color:rgba(0,0,0,.8)">check</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:8px 20px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/dominadas.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(95,168,217,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:500">Dominadas</span><span style="font-size:13.5px;color:#636B78">Espalda · Peso corporal</span></div>
+      <span style="width:26px;height:26px;border-radius:50%;background:#5FA8D9;border:1.5px solid #5FA8D9;display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-variation-settings:'FILL' 1;font-size:15px;color:rgba(0,0,0,.8)">check</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:8px 20px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/cruce_de_poleas.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(232,131,106,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:500">Cruce de poleas</span><span style="font-size:13.5px;color:#636B78">Pecho · Polea</span></div>
+      <span style="width:26px;height:26px;border-radius:50%;border:1.5px solid #1D2129"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:8px 20px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/peso_muerto_rumano.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(222,110,147,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:500">Peso muerto rumano</span><span style="font-size:13.5px;color:#636B78">Pierna · Barra</span></div>
+      <span style="width:26px;height:26px;border-radius:50%;border:1.5px solid #1D2129"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:8px 20px">
+      <div style="width:50px;height:50px;border-radius:12px;background:#22262F;overflow:hidden;position:relative;flex-shrink:0"><img src="assets/exercises/remo_en_polea_sentado.webp" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0),rgba(95,168,217,.22))"></span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:500">Remo en polea sentado</span><span style="font-size:13.5px;color:#636B78">Espalda · Polea</span></div>
+      <span style="width:26px;height:26px;border-radius:50%;border:1.5px solid #1D2129"></span>
+    </div>
+  </div>
+  <div style="background:#121419;padding:20px">
+    <span style="height:52px;border-radius:18px;background:#CBF24C;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:19px;color:#11140A">check</span><span style="font-size:14px;font-weight:600;color:#11140A">Añadir 2 ejercicios</span></span>
+  </div>
+</div>
+</div>
+</x-import>
+</div>
+
+</div>
+</section>
+</x-dc>
+</body>
+</html>
