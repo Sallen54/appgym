@@ -26,11 +26,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.MenuBook
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -179,7 +179,7 @@ fun RoutinesScreen(vm: GymViewModel, nav: NavHostController) {
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            Icons.Rounded.MenuBook, null,
+                            Icons.AutoMirrored.Rounded.MenuBook, null,
                             tint = GroupBiceps,
                             modifier = Modifier.size(21.dp)
                         )

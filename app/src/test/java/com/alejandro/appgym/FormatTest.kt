@@ -48,8 +48,23 @@ class FormatTest {
     @Test
     fun `la distancia mantiene los decimales de la maquina`() {
         assertEquals("2,81", 2.81.distanceText())
-        assertEquals("3", 3.0.distanceText())
+        assertEquals("2,8", 2.80.distanceText())
         assertEquals("0,5", 0.5.distanceText())
+        assertEquals("0,01", 0.01.distanceText())
+    }
+
+    @Test
+    fun `la distancia no arrastra ceros de relleno`() {
+        assertEquals("3", 3.0.distanceText())
+        assertEquals("0", 0.0.distanceText())
+    }
+
+    @Test
+    fun `quitar los ceros no se come digitos enteros`() {
+        // Recortar "10,00" por la derecha podría dejar "1" si no parase en la coma.
+        assertEquals("10", 10.0.distanceText())
+        assertEquals("100", 100.0.distanceText())
+        assertEquals("20,05", 20.05.distanceText())
     }
 
     @Test

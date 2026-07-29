@@ -33,10 +33,17 @@ fun percentChange(actual: Double, anterior: Double): String? {
     return if (pct > 0) "+$pct%" else "−${abs(pct)}%"
 }
 
-/** 2.81 -> "2,81" ; 3.0 -> "3" */
+/**
+ * Distancia sin ceros de relleno: 2.81 -> "2,81" ; 2.8 -> "2,8" ; 3.0 -> "3".
+ *
+ * El separador decimal es una coma, así que quitar los ceros del final nunca se
+ * come dígitos enteros: la coma corta el recorte.
+ */
 fun Double.distanceText(): String =
-    if (abs(this - this.roundToInt()) < 0.005) this.roundToInt().toString()
-    else String.format(ES, "%.2f", this)
+    String.format(ES, "%.2f", this)
+        .trimEnd('0')
+        .trimEnd(',')
+        .ifEmpty { "0" }
 
 /** 95 -> "1 h 35 min" ; 45 -> "45 min" */
 fun Int.durationText(): String = when {
