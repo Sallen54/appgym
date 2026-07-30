@@ -112,7 +112,8 @@ These are the standing rules. Breaking them is a regression:
 
 - `TodayScreen.kt` is the largest file and holds the header, week strip, exercise accordion, set rows, both dialogs and the buttons. It is the one most in need of splitting.
 - `Historial`, `ExerciseDetail`, `RoutineDetail` and `Picker` were not part of the redesign. They now use the new tokens but their layout was not reworked — the handoff explicitly leaves them pending.
-- The week strip shows a fixed window around the selected date; the calendar button covers jumping further, but there is still no month overview.
+- The week strip is a real Monday–Sunday week (it used to be a sliding window centred on the selected date, which made the weekday initials rotate and looked wrong). Chevrons move a week at a time, the calendar button jumps anywhere. There is still no month overview.
+- Marking a rest day lives in the actions block at the bottom of `Hoy`, and only when the day is empty — `setRestDay` clears the day's exercises, so offering it mid-session would silently destroy logged sets.
 - "Lo que más trabajas" in `ProgressScreen` was flagged as redundant with Récords in the handoff. Alejandro chose to keep it for now and decide once he has used it.
 
 ### Don't infer what the user can just tell you

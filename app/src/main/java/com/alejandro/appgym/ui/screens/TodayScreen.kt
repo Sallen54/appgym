@@ -30,6 +30,8 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.ExpandLess
@@ -38,7 +40,6 @@ import androidx.compose.material.icons.rounded.Hotel
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.SwapHoriz
-import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -97,6 +98,7 @@ import com.alejandro.appgym.util.clockText
 import com.alejandro.appgym.util.dayInitial
 import com.alejandro.appgym.util.distanceText
 import com.alejandro.appgym.util.durationText
+import com.alejandro.appgym.util.shortText
 import com.alejandro.appgym.util.volumeShort
 import com.alejandro.appgym.util.weightText
 import java.time.Instant
@@ -238,14 +240,7 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
                         icon = Icons.Rounded.Hotel,
                         title = "Hoy toca descansar",
                         message = "Tu plan no tiene sesión asignada a este día. " +
-                            "Puedes marcarlo como descanso o entrenar igualmente.",
-                        action = {
-                            BotonSecundario(
-                                text = "Marcar día de descanso",
-                                icon = Icons.Rounded.Hotel,
-                                onClick = { vm.toggleRestDay() }
-                            )
-                        }
+                            "Puedes marcarlo como descanso o entrenar igualmente."
                     )
                 }
             }
@@ -290,6 +285,17 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
                     icon = Icons.Rounded.Add,
                     onClick = { nav.navigate(Routes.picker(-1L)) }
                 )
+                // Marcar descanso solo cuando el día está vacío: hacerlo con
+                // series ya apuntadas las borraría.
+                if (state.isEmpty) {
+                    Spacer(Modifier.height(10.dp))
+                    BotonSecundario(
+                        text = "Marcar día de descanso",
+                        icon = Icons.Rounded.Hotel,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { vm.toggleRestDay() }
+                    )
+                }
                 if (!state.isEmpty) {
                     Spacer(Modifier.height(10.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -423,72 +429,123 @@ private fun TiraDeDias(
     onSelect: (LocalDate) -> Unit,
     onCalendario: () -> Unit
 ) {
-    val inicio = seleccionado.minusDays(4)
-    val dias = (0..6).map { inicio.plusDays(it.toLong()) }
+    val hoy = LocalDate.now()
     val accent = MaterialTheme.colorScheme.primary
 
-    Row(
+    // La tira es siempre una semana de verdad, de lunes a domingo. Antes era una
+    // ventana móvil alrededor del día elegido, así que las letras bailaban.
+    val lunes = seleccionado.minusDays((seleccionado.dayOfWeek.value - 1).toLong())
+    val dias = (0..6).map { lunes.plusDays(it.toLong()) }
+
+    val lunesDeHoy = hoy.minusDays((hoy.dayOfWeek.value - 1).toLong())
+    val etiqueta = when (lunes) {
+        lunesDeHoy -> "Esta semana"
+        lunesDeHoy.minusWeeks(1) -> "Semana pasada"
+        lunesDeHoy.plusWeeks(1) -> "Semana que viene"
+        else -> "${lunes.shortText()} – ${dias.last().shortText()}"
+    }
+
+    Column(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = Gutter),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+            .padding(horizontal = Gutter)
     ) {
-        dias.forEach { dia ->
-            val activo = dia == seleccionado
-            Column(
-                Modifier
-                    .weight(1f)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(if (activo) accent else Color.Transparent)
-                    .clickable { onSelect(dia) }
-                    .padding(vertical = 9.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
-                Text(
-                    dia.dayInitial(),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = if (activo) FontWeight.SemiBold else FontWeight.Normal
-                    ),
-                    color = if (activo) MaterialTheme.colorScheme.onPrimary else TextTertiary
-                )
-                Text(
-                    dia.dayOfMonth.toString(),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = if (activo) FontWeight.Bold else FontWeight.Medium
-                    ),
-                    color = if (activo) MaterialTheme.colorScheme.onPrimary else TextSecondary
-                )
-                // Punto bajo el número en los días marcados como descanso.
-                Box(
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                etiqueta,
+                style = MaterialTheme.typography.labelMedium,
+                color = TextSecondary,
+                modifier = Modifier.weight(1f)
+            )
+            BotonTira(Icons.Rounded.ChevronLeft, "Semana anterior") {
+                onSelect(seleccionado.minusWeeks(1))
+            }
+            Spacer(Modifier.width(5.dp))
+            BotonTira(Icons.Rounded.ChevronRight, "Semana siguiente") {
+                onSelect(seleccionado.plusWeeks(1))
+            }
+            Spacer(Modifier.width(5.dp))
+            BotonTira(Icons.Rounded.CalendarMonth, "Elegir fecha", onCalendario)
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            dias.forEach { dia ->
+                val activo = dia == seleccionado
+                val esHoy = dia == hoy
+                Column(
                     Modifier
-                        .size(4.dp)
-                        .clip(Pill)
-                        .background(
-                            if (dia.toEpochDay() in descanso) {
-                                if (activo) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.55f)
-                                else TextTertiary
-                            } else Color.Transparent
+                        .weight(1f)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { onSelect(dia) }
+                        .padding(vertical = 5.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        dia.dayInitial(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (activo) TextSecondary else TextTertiary
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    // Solo el número se rellena: el bloque entero en lima era
+                    // demasiado pesado y chocaba con la tarjeta de abajo.
+                    Box(
+                        Modifier
+                            .size(34.dp)
+                            .clip(Pill)
+                            .background(if (activo) accent else Color.Transparent)
+                            .then(
+                                if (esHoy && !activo) Modifier.border(1.dp, VoltBorderStrong, Pill)
+                                else Modifier
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            dia.dayOfMonth.toString(),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = if (activo || esHoy) FontWeight.Bold
+                                else FontWeight.Medium
+                            ),
+                            color = when {
+                                activo -> MaterialTheme.colorScheme.onPrimary
+                                esHoy -> accent
+                                else -> TextSecondary
+                            }
                         )
-                )
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    // Punto bajo el número en los días marcados como descanso.
+                    Box(
+                        Modifier
+                            .size(4.dp)
+                            .clip(Pill)
+                            .background(
+                                if (dia.toEpochDay() in descanso) {
+                                    if (activo) accent else TextTertiary
+                                } else Color.Transparent
+                            )
+                    )
+                }
             }
         }
-        Spacer(Modifier.width(6.dp))
-        Box(
-            Modifier
-                .size(42.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(Control)
-                .clickable(onClick = onCalendario),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Rounded.CalendarMonth, "Elegir fecha",
-                tint = TextSecondary,
-                modifier = Modifier.size(19.dp)
-            )
-        }
+    }
+}
+
+@Composable
+private fun BotonTira(icon: ImageVector, desc: String, onClick: () -> Unit) {
+    Box(
+        Modifier
+            .size(32.dp)
+            .clip(Pill)
+            .background(Control)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(icon, desc, tint = TextSecondary, modifier = Modifier.size(17.dp))
     }
 }
 
