@@ -67,6 +67,8 @@ The schemas are gitignored, so they are a local record only — there are no `Mi
 
 `ExerciseCatalog.kt` is a hand-written static list of 92 exercises. Each `id` must have a matching `app/src/main/assets/exercises/<id>.webp`. Images load through `AssetImage`, which keeps its own `LruCache` — there is no Coil/Glide dependency and adding one is not necessary.
 
+`nameEn` is not decoration: `ExerciseDetailScreen`'s "Ver cómo se hace" button opens a YouTube search built from it, because searching the Spanish name returns far worse technique videos. Animated demonstrations are deliberately not bundled — 92 clips would dominate the APK and each would need its licence cleared. This is the only place the app leaves the device, and it does so through an external intent, so the "no network at runtime" rule still holds.
+
 `alternativesFor(id)` suggests substitutes when a machine is taken or a movement hurts. It scores candidates by shared muscles rather than by similar names, but the catalog's muscle data is coarse (every deltoid exercise is just "Hombros"), so two hand-written tables override it: `preferidas` for cases the scoring gets wrong, and `opuestos` to stop antagonist pairs being offered as substitutes for each other — abductors were being suggested to replace adductors. Add to those tables rather than tuning the weights.
 
 ## Design system
@@ -107,6 +109,12 @@ These are the standing rules. Breaking them is a regression:
 - Marking the last set collapses the whole card to "Completado".
 
 `vm.deleteSetWithUndo` stashes the entry in `ultimaBorrada`; `AppRoot` observes it and shows the snackbar. Deleting and restoring keeps the original `setNumber` and `position`.
+
+**Weight and reps carry forward, so typing is rare.** Three layers, all in `GymRepository`: `addExerciseToSession` and `applyRoutine` seed every set from `lastPerformance(exerciseId)` (the last *done* set of that exercise, any day), falling back to the routine's target only when there is no history; `addSet` copies the last set of the block; and `propagateToPendingSets` — called from `GymViewModel.toggleDone` when marking, never when un-marking — pushes the just-completed set's weight and reps onto the still-pending sets of the same exercise. Already-done sets are never touched, so a deliberate drop set survives.
+
+`StepperField` (`Fields.kt`) has a subtlety worth knowing: `onFocusChanged` fires once with the focus still off, before `FocusRequester` can act. Confirming on that first callback closed the field in the same frame it opened, which is why typing a weight silently did nothing. The `yaTuvoFoco` flag exists to ignore that first callback — don't remove it.
+
+Dumbbell weight is logged **per dumbbell**, matching Strong and Hevy. `SerieActiva` spells that out under the steppers when `equipment == "Mancuernas"` (only 4 exercises in the catalog), because it is the one convention nobody can guess.
 
 ### Known UX weak points worth improving
 

@@ -104,6 +104,57 @@ class GymRepositoryTest {
     }
 
     @Test
+    fun al_marcar_una_serie_las_siguientes_heredan_peso_y_repeticiones() = runTest {
+        val s = repo.sessionForDate(hoy)
+        repo.addExerciseToSession(s.id, "prensa_de_piernas")
+
+        val series = db.setDao().setsFor(s.id, "prensa_de_piernas")
+        val primera = series.first().copy(weight = 28.0, reps = 9, done = true)
+        repo.updateSet(primera)
+        repo.propagateToPendingSets(primera)
+
+        val despues = db.setDao().setsFor(s.id, "prensa_de_piernas").drop(1)
+        assertTrue(despues.isNotEmpty())
+        assertTrue(despues.all { it.weight == 28.0 && it.reps == 9 && !it.done })
+    }
+
+    @Test
+    fun heredar_no_toca_las_series_ya_completadas() = runTest {
+        val s = repo.sessionForDate(hoy)
+        repo.addExerciseToSession(s.id, "prensa_de_piernas")
+        val series = db.setDao().setsFor(s.id, "prensa_de_piernas")
+
+        // La tercera se dejó hecha antes, con otro peso: no debe cambiar.
+        repo.updateSet(series[2].copy(weight = 50.0, reps = 5, done = true))
+
+        val primera = series[0].copy(weight = 28.0, reps = 9, done = true)
+        repo.updateSet(primera)
+        repo.propagateToPendingSets(primera)
+
+        val tercera = db.setDao().setsFor(s.id, "prensa_de_piernas")[2]
+        assertEquals(50.0, tercera.weight, 0.001)
+        assertEquals(5, tercera.reps)
+    }
+
+    @Test
+    fun cargar_una_rutina_arranca_con_el_peso_de_la_ultima_vez() = runTest {
+        repo.seedPlan()
+        val torso = repo.observeRoutines().first().first { it.name == "Torso A · empuje" }
+
+        val antes = repo.sessionForDate(hoy.minusDays(7))
+        repo.addExerciseToSession(antes.id, "press_de_pecho_en_maquina")
+        val hecha = db.setDao().setsFor(antes.id, "press_de_pecho_en_maquina").first()
+        repo.updateSet(hecha.copy(weight = 34.0, reps = 9, done = true))
+
+        val s = repo.sessionForDate(hoy)
+        repo.applyRoutine(s.id, torso.id)
+
+        val press = db.setDao().setsFor(s.id, "press_de_pecho_en_maquina")
+        assertTrue(press.isNotEmpty())
+        assertTrue(press.all { it.weight == 34.0 && it.reps == 9 })
+    }
+
+    @Test
     fun cargar_una_rutina_dos_veces_no_duplica_ejercicios() = runTest {
         repo.seedPlan()
         val rutina = repo.observeRoutines().first().first()

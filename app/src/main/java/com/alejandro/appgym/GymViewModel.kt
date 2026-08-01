@@ -215,7 +215,10 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
     fun updateSet(entry: SetEntry) = viewModelScope.launch { repo.updateSet(entry) }
 
     fun toggleDone(entry: SetEntry) = viewModelScope.launch {
-        repo.updateSet(entry.copy(done = !entry.done))
+        val marcando = !entry.done
+        repo.updateSet(entry.copy(done = marcando))
+        // Al marcar, las series que quedan heredan peso y repeticiones.
+        if (marcando) repo.propagateToPendingSets(entry)
     }
 
     fun deleteSet(entry: SetEntry) = viewModelScope.launch { repo.deleteSet(entry) }

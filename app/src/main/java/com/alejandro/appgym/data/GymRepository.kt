@@ -97,6 +97,20 @@ class GymRepository(
 
     suspend fun updateSet(entry: SetEntry) = sets.update(entry)
 
+    /**
+     * Al completar una serie, las que quedan pendientes de ese ejercicio copian su
+     * peso y sus repeticiones. Casi siempre repites la misma carga, así que no hay
+     * que volver a teclearla en cada serie.
+     */
+    suspend fun propagateToPendingSets(entry: SetEntry) {
+        val pendientes = sets.setsFor(entry.sessionId, entry.exerciseId)
+            .filter { !it.done && it.setNumber > entry.setNumber }
+        for (serie in pendientes) {
+            if (serie.weight == entry.weight && serie.reps == entry.reps) continue
+            sets.update(serie.copy(weight = entry.weight, reps = entry.reps))
+        }
+    }
+
     suspend fun deleteSet(entry: SetEntry) = sets.delete(entry)
 
     /** Vuelve a insertar una serie borrada, conservando su posición y número. */
@@ -253,14 +267,19 @@ class GymRepository(
         val entries = mutableListOf<SetEntry>()
         for (item in items) {
             if (sets.countFor(sessionId, item.exerciseId) > 0) continue
+            // Se arranca con lo que levantaste la última vez. La rutina solo pone
+            // el peso cuando el ejercicio es nuevo y no hay historial que copiar.
+            val ultima = lastPerformance(item.exerciseId)
+            val peso = ultima?.weight ?: item.targetWeight
+            val reps = if (ultima != null && ultima.reps > 0) ultima.reps else item.targetReps
             repeat(item.targetSets) { i ->
                 entries += SetEntry(
                     sessionId = sessionId,
                     exerciseId = item.exerciseId,
                     position = pos,
                     setNumber = i + 1,
-                    reps = item.targetReps,
-                    weight = item.targetWeight,
+                    reps = reps,
+                    weight = peso,
                     minutes = item.targetMinutes
                 )
             }

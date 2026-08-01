@@ -688,6 +688,7 @@ private fun TarjetaEjercicio(
                             SerieActiva(
                                 serie = serie,
                                 cardio = exercise.isCardio,
+                                porMancuerna = exercise.equipment == "Mancuernas",
                                 onUpdate = onUpdate,
                                 onMarcar = { onMarcar(serie) }
                             )
@@ -846,6 +847,7 @@ private fun SeriePendiente(serie: SetEntry, cardio: Boolean, onBorrar: () -> Uni
 private fun SerieActiva(
     serie: SetEntry,
     cardio: Boolean,
+    porMancuerna: Boolean,
     onUpdate: (SetEntry) -> Unit,
     onMarcar: () -> Unit
 ) {
@@ -924,6 +926,14 @@ private fun SerieActiva(
                     onIncrement = { onUpdate(serie.copy(reps = serie.reps + 1)) },
                     onValueChange = { onUpdate(serie.copy(reps = it.toIntOrNull() ?: 0)) },
                     modifier = Modifier.weight(1f)
+                )
+            }
+            if (porMancuerna) {
+                Spacer(Modifier.height(9.dp))
+                Text(
+                    "El peso es el de una mancuerna, no el de las dos",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextTertiary
                 )
             }
         }

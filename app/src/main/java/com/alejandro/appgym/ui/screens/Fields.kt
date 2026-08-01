@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.alejandro.appgym.ui.theme.Outline
 import com.alejandro.appgym.ui.theme.Pill
 import com.alejandro.appgym.ui.theme.Surface1
 import com.alejandro.appgym.ui.theme.Surface2
@@ -67,6 +70,10 @@ fun StepperField(
     var editando by remember { mutableStateOf(false) }
     // Mientras escribes, el texto es tuyo: no se sobrescribe con el valor de fuera.
     var texto by remember { mutableStateOf(TextFieldValue(value)) }
+    // onFocusChanged avisa una primera vez con el foco aún apagado, antes de que
+    // el FocusRequester haya podido actuar. Sin esta bandera ese primer aviso
+    // cerraba el campo en el mismo instante de abrirlo y el teclado no salía.
+    var yaTuvoFoco by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -74,12 +81,14 @@ fun StepperField(
     fun empezarAEditar() {
         // Entra con todo seleccionado: escribes encima sin borrar antes.
         texto = TextFieldValue(value, selection = TextRange(0, value.length))
+        yaTuvoFoco = false
         editando = true
     }
 
     fun confirmar() {
         if (!editando) return          // evita reentrar desde onFocusChanged
         editando = false
+        yaTuvoFoco = false
         onValueChange(texto.text.ifBlank { "0" })
         focusManager.clearFocus()      // cierra el teclado
     }
@@ -94,6 +103,9 @@ fun StepperField(
         Box(
             Modifier
                 .weight(1f)
+                // Zona táctil generosa: se usa a mitad de serie y con una mano.
+                .heightIn(min = 46.dp)
+                .clip(RoundedCornerShape(11.dp))
                 .clickable(enabled = editable && !editando) { empezarAEditar() },
             contentAlignment = Alignment.Center
         ) {
@@ -122,18 +134,37 @@ fun StepperField(
                         .fillMaxWidth()
                         .focusRequester(focusRequester)
                         // Tocar fuera también guarda, no se pierde lo escrito.
-                        .onFocusChanged { if (!it.isFocused && editando) confirmar() }
+                        .onFocusChanged { estado ->
+                            if (estado.isFocused) yaTuvoFoco = true
+                            else if (yaTuvoFoco && editando) confirmar()
+                        }
                 )
             } else {
-                Row(verticalAlignment = Alignment.Bottom) {
-                    Text(value, style = MaterialTheme.typography.headlineSmall, color = TextPrimary)
-                    if (suffix.isNotEmpty()) {
-                        Spacer(Modifier.width(3.dp))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            suffix,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TextSecondary,
-                            modifier = Modifier.padding(bottom = 2.dp)
+                            value,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = TextPrimary
+                        )
+                        if (suffix.isNotEmpty()) {
+                            Spacer(Modifier.width(3.dp))
+                            Text(
+                                suffix,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = TextSecondary,
+                                modifier = Modifier.padding(bottom = 2.dp)
+                            )
+                        }
+                    }
+                    // Raya fina bajo el número: sin ella no se ve que se puede tocar.
+                    if (editable) {
+                        Spacer(Modifier.height(3.dp))
+                        Box(
+                            Modifier
+                                .width(38.dp)
+                                .height(1.dp)
+                                .background(Outline)
                         )
                     }
                 }

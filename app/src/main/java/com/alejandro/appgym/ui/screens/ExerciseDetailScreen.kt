@@ -1,6 +1,9 @@
 package com.alejandro.appgym.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,28 +15,35 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.FitnessCenter
+import androidx.compose.material.icons.rounded.PlayCircleOutline
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.alejandro.appgym.GymViewModel
+import com.alejandro.appgym.data.Exercise
 import com.alejandro.appgym.data.ExerciseCatalog
 import com.alejandro.appgym.ui.components.AppCard
 import com.alejandro.appgym.ui.components.AssetImage
@@ -43,6 +53,7 @@ import com.alejandro.appgym.ui.components.ProgressLine
 import com.alejandro.appgym.ui.components.SectionTitle
 import com.alejandro.appgym.ui.components.StatCard
 import com.alejandro.appgym.ui.theme.Ink
+import com.alejandro.appgym.ui.theme.Pill
 import com.alejandro.appgym.ui.theme.TextPrimary
 import com.alejandro.appgym.ui.theme.TextSecondary
 import com.alejandro.appgym.ui.theme.TextTertiary
@@ -115,6 +126,13 @@ fun ExerciseDetailScreen(exerciseId: String, vm: GymViewModel, nav: NavHostContr
                         tint = TextPrimary
                     )
                 }
+
+                BotonTecnica(
+                    exercise = exercise,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Gutter, bottom = 16.dp)
+                )
             }
         }
 
@@ -244,6 +262,46 @@ fun ExerciseDetailScreen(exerciseId: String, vm: GymViewModel, nav: NavHostContr
                 }
             )
         }
+    }
+}
+
+/**
+ * Abre una búsqueda en YouTube con la técnica del ejercicio.
+ *
+ * No se empaquetan vídeos ni gifs: serían 92 archivos animados dentro del APK,
+ * con lo que pesaría, y habría que resolver la licencia de cada uno. Se busca por
+ * el nombre en inglés porque es con el que hay material decente.
+ */
+@Composable
+private fun BotonTecnica(exercise: Exercise, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    Row(
+        modifier
+            .clip(Pill)
+            .background(Ink.copy(alpha = 0.78f))
+            .clickable {
+                val busqueda = Uri.encode("${exercise.nameEn} proper form")
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.youtube.com/results?search_query=$busqueda")
+                )
+                // Si el móvil no tuviera navegador ni YouTube, mejor no reventar.
+                runCatching { context.startActivity(intent) }
+            }
+            .padding(horizontal = 15.dp, vertical = 11.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            Icons.Rounded.PlayCircleOutline, null,
+            tint = TextPrimary,
+            modifier = Modifier.size(17.dp)
+        )
+        Spacer(Modifier.width(7.dp))
+        Text(
+            "Ver cómo se hace",
+            style = MaterialTheme.typography.labelMedium,
+            color = TextPrimary
+        )
     }
 }
 
