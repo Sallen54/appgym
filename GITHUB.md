@@ -118,7 +118,7 @@ secreto copiado. La contraseña debe ser **ASCII**: sin eñes, sin tildes.
 ```powershell
 $pass = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 24 | % {[char]$_})
 $kt = "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe"
-& $kt -genkeypair -v -keystore "$env:USERPROFILE\appgym-release.jks" -alias appgym -keyalg RSA -keysize 2048 -validity 10000 -storepass $pass -keypass $pass -dname "CN=Alejandro, O=AppGym, C=ES"
+& $kt -genkeypair -v -keystore "$env:USERPROFILE\appgym-release.jks" -alias appgym -keyalg RSA -keysize 2048 -validity 10000 -storepass $pass -keypass $pass -dname "CN=AppGym, O=AppGym, C=ES"
 Write-Host "GUARDA ESTA CONTRASENA:" -ForegroundColor Yellow
 Write-Host $pass
 ```
@@ -180,6 +180,32 @@ Ya está. Obtainium comprueba solo si hay versión nueva y te avisa. Al tocar la
 notificación te instala la actualización encima, conservando tus datos.
 
 ---
+
+## Compartirla con otra gente
+
+Con el repositorio **público**, cualquiera puede entrar en
+`github.com/Sallen54/appgym/releases` y bajarse el APK. No hace falta token ni
+cuenta de GitHub.
+
+Para cambiarlo: **Settings → General → abajo del todo, Danger Zone → Change
+repository visibility → Make public**.
+
+Antes de darle, ten en cuenta:
+
+- **Tu clave de firma no se publica.** Vive como secreto de Actions y los secretos
+  no se ven ni en un repositorio público. Tampoco está en el código: el
+  `.gitignore` excluye `*.jks`.
+- **El código sí queda visible**, y con él este archivo y `CLAUDE.md`. Ya están
+  limpios de datos personales.
+- **Tus entrenamientos no están en el repositorio.** Viven solo en tu móvil.
+
+Lo que le tienes que decir a quien se la instale:
+
+1. Que baje el `.apk` de Releases desde el móvil.
+2. Que acepte el aviso de "instalar apps de origen desconocido" para el
+   navegador. Es lo normal fuera de Play Store.
+3. Que la primera pantalla le va a preguntar nombre, altura, edad y peso, y que
+   puede saltárselo todo.
 
 ## El día a día
 

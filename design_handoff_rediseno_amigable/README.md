@@ -52,7 +52,7 @@ Sombra: ninguna; la jerarquía se hace con los tonos de superficie.
 ## Screens / Views
 
 ### 1. Hoy (TodayScreen.kt)
-- **Header**: saludo "Hola, Alejandro" (15sp, secundario) sobre el nombre de la sesión (28sp). A la derecha, píldora `#23211A` con icono `schedule` lima + "1 h 12 min" (13sp/500). Desaparecen el overline "HOY" y el rango horario del header (el rango pasa a "Editar horas" si se mantiene).
+- **Header**: saludo "Hola, <nombre>" (15sp, secundario) sobre el nombre de la sesión (28sp). A la derecha, píldora `#23211A` con icono `schedule` lima + "1 h 12 min" (13sp/500). Desaparecen el overline "HOY" y el rango horario del header (el rango pasa a "Editar horas" si se mantiene).
 - **Tira de días**: 7 días SIN tarjeta (sin fondo ni borde): letra del día 11sp terciario + número 15sp/500 secundario, apilados con gap 3dp, padding vertical 9dp. Día seleccionado: fondo lima radio 14dp, textos en tinta `#191D07` (letra 600, número 700). Al final de la fila, **botón cuadrado 42dp radio 14dp `#23211A` con icono `calendar_month`** → abre date picker (UX: salto de fecha).
 - **Tarjeta resumen de sesión** (sustituye las 3 stat-cards): tarjeta 24dp con anillo de progreso 56dp (track `#322D25` grosor 6, progreso lima con cap redondeado, "57%" centrado 13sp/600) + "Buena sesión, sigue así" (17sp/600) + "12 de 21 series · 6.240 kg movidos" (14sp secundario).
 - **Título de sección**: "Sesión de hoy" (17sp/600) con enlace "Tu plan · Fase 0" (13sp/500 lima) a la derecha → navega a PlanScreen (UX: plan visible).
@@ -77,7 +77,7 @@ Sombra: ninguna; la jerarquía se hace con los tonos de superficie.
 - Tarjeta guía: fondo `#23211A`, icono `menu_book` en contenedor 46dp radio 16dp `rgba(233,192,131,.14)` ámbar, título 16sp/600, subtítulo 14sp, chevron.
 
 ### 4. Progreso (ProgressScreen.kt)
-- Header: "Progreso" (28sp) + "Alejandro · 181 cm · 74,6 kg" (15sp secundario; tap edita perfil — desaparece la tarjeta de perfil separada). Botón circular 46dp `#23211A` con `ios_share`.
+- Header: "Progreso" (28sp) + "<nombre> · <altura> cm · <peso> kg" (15sp secundario; tap edita perfil — desaparece la tarjeta de perfil separada). Botón circular 46dp `#23211A` con `ios_share`.
 - **3 stat-cards arriba** (radio 20dp): icono de color (lima `exercise`, ámbar `local_fire_department`, rosa `event_available`), cifra 20sp/600, label 12.5sp secundario. Sustituyen la fila anterior con barritas de color.
 - Peso corporal: título de sección 17sp/600 + botón píldora **lima** "Registrar" con `add`. Tarjeta: "74,6 kg" 32sp/600, badge píldora lima suave "−1,2 kg"; línea lima grosor 3 con relleno degradado y punto final; fechas 12sp terciario.
 - Peso por semana: tarjeta con "Esta semana llevas **18.320 kg**" (15sp, cifra en claro/600); 8 barras radio 10dp con la rampa de verdes (sin fondo de track); etiquetas de semana 12sp, la actual en lima/600.

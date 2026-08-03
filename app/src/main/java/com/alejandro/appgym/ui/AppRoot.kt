@@ -61,6 +61,7 @@ import com.alejandro.appgym.ui.screens.RoutineDetailScreen
 import com.alejandro.appgym.ui.screens.RoutinesScreen
 import com.alejandro.appgym.ui.screens.SwapScreen
 import com.alejandro.appgym.ui.screens.TodayScreen
+import com.alejandro.appgym.ui.screens.WelcomeScreen
 import com.alejandro.appgym.ui.theme.Ink
 import com.alejandro.appgym.ui.theme.OutlineSoft
 import com.alejandro.appgym.ui.theme.TextTertiary
@@ -100,6 +101,7 @@ fun AppRoot() {
 
     val snackbar = remember { SnackbarHostState() }
     val borrada by vm.ultimaBorrada.collectAsStateWithLifecycle()
+    val bienvenidaHecha by vm.onboarded.collectAsStateWithLifecycle()
 
     LaunchedEffect(borrada) {
         val entry = borrada ?: return@LaunchedEffect
@@ -112,6 +114,15 @@ fun AppRoot() {
             duration = SnackbarDuration.Short
         )
         if (res == SnackbarResult.ActionPerformed) vm.deshacerBorrado() else vm.descartarDeshacer()
+    }
+
+    // En una instalación nueva no hay app que enseñar hasta que se conteste la
+    // bienvenida: ni barra inferior ni navegación, para no distraer.
+    if (!bienvenidaHecha) {
+        Scaffold(containerColor = Ink) { padding ->
+            Box(Modifier.fillMaxSize().padding(padding)) { WelcomeScreen(vm) }
+        }
+        return
     }
 
     Scaffold(

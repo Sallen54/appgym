@@ -119,8 +119,13 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
         item {
             ScreenHeader(
                 title = "Progreso",
-                subtitle = "${profile.name} · ${profile.age} años · ${profile.heightCm} cm" +
-                    (actual?.let { " · ${it.weightText()} kg" } ?: ""),
+                // Sin nombre (quien se saltó la bienvenida) no debe salir un "·" suelto.
+                subtitle = listOfNotNull(
+                    profile.name.takeIf { it.isNotBlank() },
+                    "${profile.age} años",
+                    "${profile.heightCm} cm",
+                    actual?.let { "${it.weightText()} kg" }
+                ).joinToString(" · "),
                 onSubtitleClick = { showProfileDialog = true },
                 trailing = {
                     CircleIconButton(

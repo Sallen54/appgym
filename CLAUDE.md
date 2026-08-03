@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-AppGym: a personal Android gym tracker for one user (Alejandro, 181 cm, ~75 kg, returning to training after years of volleyball). Kotlin + Jetpack Compose + Room. No backend, no login, no network at runtime — everything lives on the phone.
+AppGym: a personal Android gym tracker. Kotlin + Jetpack Compose + Room. No backend, no login, no network at runtime — everything lives on the phone.
 
-Because it has exactly one user, there is no need for onboarding flows, empty-account states, or multi-user abstractions. Optimise for **someone using this one-handed, mid-set, in a noisy gym**.
+It was written for one person (the owner, returning to training after years of volleyball) and later shared with friends, so it now has a first-run screen but still no accounts, no sync and no multi-user abstractions. Optimise for **someone using this one-handed, mid-set, in a noisy gym**.
 
 The UI language is **Spanish**. All user-facing strings, exercise names, and code comments are in Spanish. Identifiers are English except in the newer screens, where Spanish names crept in (`PlanCard`, `DiaFila`, `HoraChip`) — match the surrounding file rather than renaming.
 
@@ -51,9 +51,15 @@ Dates are stored as `LocalDate.toEpochDay()` (Long), times as minutes since midn
 
 ### Two things that will bite you
 
-**Room migrations.** The DB is at version 7 with real user data on a physical device. Every schema change needs a `Migration` added to `addMigrations(...)` in `AppDatabase.kt`. `fallbackToDestructiveMigration()` is set as a last resort — if you rely on it, Alejandro loses his training history. Test the migration against a populated database before shipping.
+**Room migrations.** The DB is at version 7 with real user data on a physical device. Every schema change needs a `Migration` added to `addMigrations(...)` in `AppDatabase.kt`. `fallbackToDestructiveMigration()` is set as a last resort — if you rely on it, users lose their training history. Test the migration against a populated database before shipping.
 
-**Seeded plans.** `SeedData.kt` holds the plan the app installs on first run (currently one: "Grasa y músculo"; an adaptation plan was retired once Alejandro finished it). Changing them requires bumping `SeedData.VERSION`; `GymRepository.reseedPlan()` then swaps them in. That function deliberately preserves (a) routines the user created by hand (`planKey` is blank) and (b) old seeded routines already referenced by a logged session. Keep both guarantees. Retired routine names must be added to `SeedData.obsoleteNames` or they linger forever, and `DEFAULT_KEY` must always point at a plan that still exists — `GymViewModel` falls back to it if the stored `activePlan` no longer resolves.
+**Seeded plans.** `SeedData.kt` holds the plan the app installs on first run (currently one: "Grasa y músculo"; an adaptation plan was retired once it had served its purpose). Changing them requires bumping `SeedData.VERSION`; `GymRepository.reseedPlan()` then swaps them in. That function deliberately preserves (a) routines the user created by hand (`planKey` is blank) and (b) old seeded routines already referenced by a logged session. Keep both guarantees. Retired routine names must be added to `SeedData.obsoleteNames` or they linger forever, and `DEFAULT_KEY` must always point at a plan that still exists — `GymViewModel` falls back to it if the stored `activePlan` no longer resolves.
+
+### First run
+
+`WelcomeScreen` shows when `GymViewModel.onboarded` is false, and `AppRoot` returns early so there is no NavHost or bottom bar behind it. Every field is optional; blanks fall back to `DEFAULT_HEIGHT` / `DEFAULT_AGE`, and any screen showing the profile has to tolerate a blank name.
+
+Two details are load-bearing. `onboarded` defaults to `prefs.contains(KEY_SEED_VERSION)`, so anyone who used the app before this screen existed is treated as done and never sees it. And `completeOnboarding` writes `KEY_SEED_VERSION` **whether or not** the user took the plan — otherwise someone who chose to start blank would find four routines appearing on the next release, because `init` would read it as "never seeded". For the same reason `init` only reseeds when the key already exists.
 
 ### Room schema export and CI
 
@@ -65,9 +71,9 @@ The schemas are gitignored, so they are a local record only — there are no `Mi
 
 ### Exercise catalog
 
-`ExerciseCatalog.kt` is a hand-written static list of 92 exercises. Each `id` must have a matching `app/src/main/assets/exercises/<id>.webp`. Images load through `AssetImage`, which keeps its own `LruCache` — there is no Coil/Glide dependency and adding one is not necessary.
+`ExerciseCatalog.kt` is a hand-written static list of 256 exercises. Each `id` must have a matching `app/src/main/assets/exercises/<id>.webp`. Images load through `AssetImage`, which keeps its own `LruCache` — there is no Coil/Glide dependency and adding one is not necessary.
 
-`nameEn` is not decoration: `ExerciseDetailScreen`'s "Ver cómo se hace" button opens a YouTube search built from it, because searching the Spanish name returns far worse technique videos. Animated demonstrations are deliberately not bundled — 92 clips would dominate the APK and each would need its licence cleared. This is the only place the app leaves the device, and it does so through an external intent, so the "no network at runtime" rule still holds.
+`nameEn` is not decoration: `ExerciseDetailScreen`'s "Ver cómo se hace" button opens a YouTube search built from it, because searching the Spanish name returns far worse technique videos. Animated demonstrations are deliberately not bundled — 256 clips would dominate the APK and each would need its licence cleared. This is the only place the app leaves the device, and it does so through an external intent, so the "no network at runtime" rule still holds.
 
 `alternativesFor(id)` suggests substitutes when a machine is taken or a movement hurts. It scores candidates by shared muscles rather than by similar names, but the catalog's muscle data is coarse (every deltoid exercise is just "Hombros"), so two hand-written tables override it: `preferidas` for cases the scoring gets wrong, and `opuestos` to stop antagonist pairs being offered as substitutes for each other — abductors were being suggested to replace adductors. Add to those tables rather than tuning the weights.
 
@@ -114,7 +120,7 @@ These are the standing rules. Breaking them is a regression:
 
 `StepperField` (`Fields.kt`) has a subtlety worth knowing: `onFocusChanged` fires once with the focus still off, before `FocusRequester` can act. Confirming on that first callback closed the field in the same frame it opened, which is why typing a weight silently did nothing. The `yaTuvoFoco` flag exists to ignore that first callback — don't remove it.
 
-Dumbbell weight is logged **per dumbbell**, matching Strong and Hevy. `SerieActiva` spells that out under the steppers when `equipment == "Mancuernas"` (only 4 exercises in the catalog), because it is the one convention nobody can guess.
+Dumbbell weight is logged **per dumbbell**, matching Strong and Hevy. `SerieActiva` spells that out under the steppers when `equipment == "Mancuernas"` (50 exercises in the catalog), because it is the one convention nobody can guess.
 
 ### Known UX weak points worth improving
 
@@ -122,15 +128,15 @@ Dumbbell weight is logged **per dumbbell**, matching Strong and Hevy. `SerieActi
 - `Historial`, `ExerciseDetail`, `RoutineDetail` and `Picker` were not part of the redesign. They now use the new tokens but their layout was not reworked — the handoff explicitly leaves them pending.
 - The week strip is a real Monday–Sunday week (it used to be a sliding window centred on the selected date, which made the weekday initials rotate and looked wrong). Chevrons move a week at a time, the calendar button jumps anywhere. There is still no month overview.
 - Marking a rest day lives in the actions block at the bottom of `Hoy`, and only when the day is empty — `setRestDay` clears the day's exercises, so offering it mid-session would silently destroy logged sets.
-- "Lo que más trabajas" in `ProgressScreen` was flagged as redundant with Récords in the handoff. Alejandro chose to keep it for now and decide once he has used it.
+- "Lo que más trabajas" in `ProgressScreen` was flagged as redundant with Récords in the handoff. The owner chose to keep it for now and decide once he has used it.
 
 ### Don't infer what the user can just tell you
 
-An earlier version derived the current training "phase" from the date of the oldest logged session. It showed "semana 2 de 3" to someone who had started the day before, because a stray session from testing sat in the database. The lesson stuck: **the active plan is now a value Alejandro sets** (`GymViewModel.activePlan`, backed by SharedPreferences) and the app never guesses it. Counters like `trainedDays` are shown as information, never as rules that drive behaviour.
+An earlier version derived the current training "phase" from the date of the oldest logged session. It showed "semana 2 de 3" to someone who had started the day before, because a stray session from testing sat in the database. The lesson stuck: **the active plan is now a value the user sets** (`GymViewModel.activePlan`, backed by SharedPreferences) and the app never guesses it. Counters like `trainedDays` are shown as information, never as rules that drive behaviour.
 
 ## Screens
 
-`Hoy` (log today, week strip, gym entry/exit times) · `Máquinas` (92-exercise catalog with search and muscle filters) · `Rutinas` (three collapsible plans → their days) · `Progreso` (profile, body weight chart, stats, share report) · plus `Plan`, `Historial`, `ExerciseDetail`, `RoutineDetail`, `Picker` reached by navigation.
+`Hoy` (log today, week strip, gym entry/exit times) · `Máquinas` (256-exercise catalog with search and muscle filters) · `Rutinas` (three collapsible plans → their days) · `Progreso` (profile, body weight chart, stats, share report) · plus `Plan`, `Historial`, `ExerciseDetail`, `RoutineDetail`, `Picker` reached by navigation.
 
 ## Testing
 

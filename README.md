@@ -17,8 +17,9 @@ Kotlin + Jetpack Compose (Material 3) + Room. Sin conexión a internet: todo es 
 Cada ejercicio es una tarjeta con sus series: peso, repeticiones y check al completarla.
 El volumen (kg levantados) se calcula solo.
 
-**Máquinas** — catálogo de 92 ejercicios con foto, buscador (nombre, músculo o material)
-y filtros por grupo muscular. Al abrir uno ves tu mejor marca y la evolución del peso.
+**Máquinas** — catálogo de 256 ejercicios con foto, buscador (nombre, músculo o material)
+y filtros por grupo muscular. Al abrir uno ves tu mejor marca, la evolución del peso y un
+botón que busca en YouTube cómo se hace.
 
 **Plan** — desde Rutinas, la guía completa: en qué fase estás, qué rutinas te tocan
 esta semana y el porqué de cada cosa.
@@ -30,13 +31,15 @@ y descanso por ejercicio. Se cargan en la sesión del día con un toque.
 evolución, y las estadísticas de entrenamiento: volumen por semana, ejercicios más
 trabajados, récords personales e historial de sesiones.
 
-La app es de un solo usuario: no hay login ni cuentas, todo vive en el móvil.
+No hay login ni cuentas: todo vive en el móvil. La primera vez te pregunta el nombre,
+la altura, la edad y el peso (todo opcional) y si quieres empezar con un plan hecho o en
+blanco.
 
 ## Estructura
 
 ```
 app/src/main/
-├── assets/exercises/          92 imágenes .webp
+├── assets/exercises/          256 imágenes .webp
 ├── java/com/alejandro/appgym/
 │   ├── data/                  Room: entidades, DAOs, repositorio, catálogo
 │   ├── ui/
@@ -58,11 +61,9 @@ app/src/main/
 
 ## El plan cargado
 
-La app trae tres planes (`data/SeedData.kt`), cada uno con sus días:
-
-- **Inicio** — 2 días, primeras 3 semanas. Volver sin agujetas incapacitantes.
-- **Voleibol** — 2 días. Salto, agilidad, core y hombro sano.
-- **Grasa y músculo** — 4 días de torso/pierna. El plan principal.
+Si en la bienvenida eliges empezar con plan, se carga **Grasa y músculo**
+(`data/SeedData.kt`): cuatro días de torso/pierna repartidos por la semana. Está pensado
+para un gimnasio normal, con máquinas, poleas, multipower y mancuernas.
 
 Está explicado dentro de la app, en **Rutinas → Tu plan**: fases, cómo progresar, comida y qué esperar mes a mes. Los textos viven en `data/PlanGuide.kt`. Para cambiarlo, edita `SeedData.kt` y sube
 `VERSION`: la app sustituye las rutinas automáticas sin tocar las que hayas creado tú ni
@@ -79,7 +80,7 @@ para guardarlo o mandárselo a alguien que valore si el rendimiento mejora o emp
 
 Base de datos SQLite (Room) en el almacenamiento privado de la app:
 `/data/data/com.alejandro.appgym/databases/appgym.db`. Solo la app puede leerla.
-Nombre y altura van en `SharedPreferences`. No hay servidor ni cuenta: si desinstalas
+Nombre, altura y edad van en `SharedPreferences`. No hay servidor ni cuenta: si desinstalas
 la app sin copia de seguridad, se pierde.
 
 ## Publicar actualizaciones
@@ -96,6 +97,14 @@ Los pasos para montarlo están en `GITHUB.md`.
 
 En Android Studio, botón derecho sobre `FormatTest` o `GymRepositoryTest` → Run.
 
-## Créditos
+## Para quien se la instale
 
-Imágenes de ejercicios: [free-exercise-db](https://github.com/yuhonas/free-exercise-db) (Unlicense / dominio público).
+El APK está en la pestaña **Releases**. Android avisará de que viene de fuera de Play
+Store: hay que darle permiso al navegador para instalar apps desconocidas. No pide
+ningún permiso del sistema ni se conecta a nada; lo único que sale del móvil es el
+botón "Ver cómo se hace", que abre una búsqueda en YouTube.
+
+## Créditos y licencias
+
+- Imágenes de ejercicios: [free-exercise-db](https://github.com/yuhonas/free-exercise-db) — Unlicense (dominio público).
+- Tipografía [Outfit](https://fonts.google.com/specimen/Outfit) — SIL Open Font License 1.1, incluida en `app/src/main/assets/OFL-Outfit.txt`.

@@ -931,7 +931,7 @@ private fun SerieActiva(
             if (porMancuerna) {
                 Spacer(Modifier.height(9.dp))
                 Text(
-                    "El peso es el de una mancuerna, no el de las dos",
+                    "Apunta el peso de una mancuerna",
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextTertiary
                 )

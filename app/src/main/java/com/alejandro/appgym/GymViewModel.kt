@@ -69,30 +69,68 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
     private val prefs = app.getSharedPreferences("appgym", android.content.Context.MODE_PRIVATE)
 
     init {
-        // El plan de inicio se carga una sola vez. Si el usuario borra las rutinas,
-        // no vuelven a aparecer.
-        if (prefs.getInt(KEY_SEED_VERSION, 0) < SeedData.VERSION) {
+        // La resiembra solo afecta a quien ya tiene el plan puesto. En una
+        // instalación nueva no se siembra nada hasta que la bienvenida lo diga:
+        // el plan es el de Alejandro y no todo el mundo lo quiere.
+        if (prefs.contains(KEY_SEED_VERSION) &&
+            prefs.getInt(KEY_SEED_VERSION, 0) < SeedData.VERSION
+        ) {
             viewModelScope.launch {
                 repo.reseedPlan()
                 prefs.edit().putInt(KEY_SEED_VERSION, SeedData.VERSION).apply()
             }
         }
-        // Primer registro de peso, para que la gráfica tenga un punto de partida.
-        if (!prefs.getBoolean(KEY_WEIGHT_SEEDED, false)) {
-            viewModelScope.launch {
-                if (!repo.hasWeightEntries()) repo.logWeight(LocalDate.now(), START_WEIGHT)
-                prefs.edit().putBoolean(KEY_WEIGHT_SEEDED, true).apply()
-            }
-        }
+    }
+
+    /* ---------------- Bienvenida ---------------- */
+
+    /**
+     * Quien ya había abierto la app antes de que existiera la bienvenida no debe
+     * verla: se le da por hecha si tiene una versión de plan guardada.
+     */
+    private val _onboarded = MutableStateFlow(
+        prefs.getBoolean(KEY_ONBOARDED, prefs.contains(KEY_SEED_VERSION))
+    )
+    val onboarded: StateFlow<Boolean> = _onboarded.asStateFlow()
+
+    /**
+     * Cierra la bienvenida. Todos los datos son opcionales: un 0 o un texto vacío
+     * significa "no lo digo" y se queda el valor por defecto.
+     */
+    fun completeOnboarding(
+        name: String,
+        heightCm: Int,
+        age: Int,
+        weightKg: Double,
+        conPlan: Boolean
+    ) = viewModelScope.launch {
+        val perfil = Profile(
+            name = name.trim(),
+            heightCm = if (heightCm > 0) heightCm else DEFAULT_HEIGHT,
+            age = if (age > 0) age else DEFAULT_AGE
+        )
+        prefs.edit()
+            .putString(KEY_NAME, perfil.name)
+            .putInt(KEY_HEIGHT, perfil.heightCm)
+            .putInt(KEY_AGE, perfil.age)
+            // Se marca sembrado en los dos casos: quien empieza en blanco no debe
+            // encontrarse el plan apareciendo solo en la siguiente actualización.
+            .putInt(KEY_SEED_VERSION, SeedData.VERSION)
+            .putBoolean(KEY_ONBOARDED, true)
+            .apply()
+        _profile.value = perfil
+        if (weightKg > 0) repo.logWeight(LocalDate.now(), weightKg)
+        if (conPlan) repo.seedPlan()
+        _onboarded.value = true
     }
 
     /* ---------------- Perfil ---------------- */
 
     private val _profile = MutableStateFlow(
         Profile(
-            name = prefs.getString(KEY_NAME, "Alejandro").orEmpty(),
-            heightCm = prefs.getInt(KEY_HEIGHT, 181),
-            age = prefs.getInt(KEY_AGE, 26)
+            name = prefs.getString(KEY_NAME, "").orEmpty(),
+            heightCm = prefs.getInt(KEY_HEIGHT, DEFAULT_HEIGHT),
+            age = prefs.getInt(KEY_AGE, DEFAULT_AGE)
         )
     )
     val profile: StateFlow<Profile> = _profile.asStateFlow()
@@ -330,8 +368,11 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
         private const val KEY_HEIGHT = "perfil_altura_cm"
         private const val KEY_AGE = "perfil_edad"
         private const val KEY_ACTIVE_PLAN = "plan_activo"
-        private const val KEY_WEIGHT_SEEDED = "peso_inicial_cargado"
-        private const val START_WEIGHT = 75.0
+        private const val KEY_ONBOARDED = "bienvenida_hecha"
+
+        /** Se usan solo si alguien se salta la bienvenida. */
+        private const val DEFAULT_HEIGHT = 175
+        private const val DEFAULT_AGE = 30
 
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")

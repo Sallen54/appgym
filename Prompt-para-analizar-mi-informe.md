@@ -12,15 +12,14 @@ Eres un preparador físico con experiencia en fuerza y recomposición corporal.
 Te adjunto el informe que exporta mi app de entrenamiento. Quiero una lectura
 honesta: qué va bien, qué va mal y qué cambiaría.
 
-MI SITUACIÓN
-- Hombre, 26 años, 181 cm, unos 75 kg.
-- Jugué voleibol durante años. Lo dejé y estuve parado bastante tiempo.
-- He vuelto al gimnasio hace poco. Entreno solo, sin entrenador.
-- Objetivo: perder grasa y ganar músculo a la vez. Y no perder lo que me dio el
-  voleibol: salto, agilidad y un hombro que aguante.
-- Sesiones de 1 a 2 horas. Suelo poder ir 4 días por semana.
-- Mi gimnasio tiene máquinas normales, poleas, multipower, mancuernas y las
-  típicas de cardio. No hay nada exótico.
+MI SITUACIÓN  (cambia esto por lo tuyo antes de enviarlo)
+- [Hombre/Mujer], [edad] años, [altura] cm, unos [peso] kg.
+- Mi historial deportivo: [años parado / vengo de otro deporte / nunca he
+  entrenado...].
+- Entreno solo, sin entrenador.
+- Objetivo: [perder grasa / ganar músculo / rendimiento en un deporte...].
+- Sesiones de [duración]. Suelo poder ir [nº] días por semana.
+- Mi gimnasio tiene [máquinas, poleas, multipower, mancuernas, barras, cardio...].
 
 QUÉ CONTIENE EL INFORME
 - Perfil, peso corporal e IMC.
@@ -92,9 +91,8 @@ lectura de los datos.
 revisión rápida:
 
 ```
-Te adjunto el informe de mi app de entrenamiento. Tengo 26 años, 181 cm, 75 kg,
-vuelvo al gimnasio tras años parado (venía del voleibol) y busco perder grasa y
-ganar músculo.
+Te adjunto el informe de mi app de entrenamiento. Tengo [edad] años, [altura] cm,
+[peso] kg, y mi objetivo es [lo que busques].
 
 Dime en media página: qué va bien, qué estoy haciendo mal, y los dos cambios
 que harías esta semana. Apóyate en los números del informe y sé directo. Si no
