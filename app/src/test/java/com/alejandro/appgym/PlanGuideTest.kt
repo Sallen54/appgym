@@ -1,5 +1,6 @@
 package com.alejandro.appgym
 
+import com.alejandro.appgym.data.ExerciseCatalog
 import com.alejandro.appgym.data.PlanGuide
 import com.alejandro.appgym.data.SeedData
 import org.junit.Assert.assertEquals
@@ -8,12 +9,7 @@ import org.junit.Test
 
 class PlanGuideTest {
 
-    @Test
-    fun `solo queda el plan principal`() {
-        assertEquals(1, SeedData.groups.size)
-        assertEquals("recomp", SeedData.groups.first().key)
-        assertEquals("recomp", SeedData.DEFAULT_KEY)
-    }
+    private val plan get() = SeedData.groupOf(SeedData.DEFAULT_KEY)!!
 
     @Test
     fun `el plan por defecto existe de verdad`() {
@@ -22,88 +18,97 @@ class PlanGuideTest {
     }
 
     @Test
-    fun `cada plan tiene dias y cada dia ejercicios`() {
-        SeedData.groups.forEach { grupo ->
-            assertTrue("«${grupo.name}» sin días", grupo.days.isNotEmpty())
-            grupo.days.forEach { dia ->
-                assertTrue("«${dia.name}» sin ejercicios", dia.items.isNotEmpty())
-                assertEquals("«${dia.name}» con la clave de plan mal", grupo.key, dia.key)
+    fun `estan las rutinas por parejas mas cuerpo entero y cardio`() {
+        assertEquals(
+            listOf(
+                "Pecho y bíceps", "Espalda y tríceps", "Pierna y glúteo",
+                "Hombro y core", "Cuerpo entero", "Cardio"
+            ),
+            plan.days.map { it.name }
+        )
+    }
+
+    @Test
+    fun `cada rutina tiene ejercicios y foco`() {
+        SeedData.plans.forEach { dia ->
+            assertTrue("«${dia.name}» sin ejercicios", dia.items.isNotEmpty())
+            assertTrue("«${dia.name}» sin foco", dia.focus.isNotBlank())
+        }
+    }
+
+    @Test
+    fun `todos los ejercicios del plan existen en el catalogo`() {
+        SeedData.plans.flatMap { it.items }.forEach {
+            assertTrue("«${it.exerciseId}» no está en el catálogo", ExerciseCatalog.find(it.exerciseId) != null)
+        }
+    }
+
+    @Test
+    fun `las rutinas de fuerza acaban con cardio`() {
+        plan.days.filter { it.name != "Cardio" }.forEach { dia ->
+            val ultimo = ExerciseCatalog.find(dia.items.last().exerciseId)!!
+            assertTrue("«${dia.name}» no acaba con cardio", ultimo.isCardio)
+            assertTrue("«${dia.name}» con el cardio sin minutos", dia.items.last().minutes > 0)
+        }
+    }
+
+    @Test
+    fun `la rutina de cardio es solo cardio`() {
+        val cardio = plan.days.first { it.name == "Cardio" }
+        assertTrue(cardio.items.all { ExerciseCatalog.find(it.exerciseId)!!.isCardio })
+    }
+
+    @Test
+    fun `la fuerza tiene repeticiones y peso de partida`() {
+        SeedData.plans.flatMap { it.items }
+            .filter { !ExerciseCatalog.find(it.exerciseId)!!.isCardio }
+            .forEach {
+                assertTrue("«${it.exerciseId}» sin repeticiones", it.reps in 6..20)
+                val ex = ExerciseCatalog.find(it.exerciseId)!!
+                if (ex.equipment != "Peso corporal") {
+                    assertTrue("«${it.exerciseId}» sin peso de partida", it.kg > 0)
+                }
             }
-        }
     }
 
     @Test
-    fun `cada dia del plan cae en un dia de la semana distinto`() {
-        val dias = SeedData.groupOf("recomp")!!.days.map { it.weekday }
-        assertEquals("No puede haber dos rutinas el mismo día", dias.size, dias.toSet().size)
-        assertTrue("Días fuera de rango", dias.all { it in 1..7 })
+    fun `las rutinas por parejas trabajan lo que dicen`() {
+        fun grupos(nombre: String) = plan.days.first { it.name == nombre }.items
+            .mapNotNull { ExerciseCatalog.find(it.exerciseId) }
+            .filter { !it.isCardio }
+            .map { it.group }
+            .toSet()
+        assertEquals(setOf("Pecho", "Bíceps"), grupos("Pecho y bíceps"))
+        assertTrue(grupos("Espalda y tríceps").containsAll(setOf("Espalda", "Tríceps")))
+        assertEquals(setOf("Pierna"), grupos("Pierna y glúteo"))
+        assertTrue(grupos("Hombro y core").containsAll(setOf("Hombro", "Core")))
     }
 
     @Test
-    fun `la app sabe que toca cada dia`() {
-        assertEquals("Torso A · empuje", SeedData.dayFor("recomp", 1)?.name)   // lunes
-        assertEquals("Pierna A · salto", SeedData.dayFor("recomp", 2)?.name)   // martes
-        assertEquals("Torso B · tirón", SeedData.dayFor("recomp", 4)?.name)    // jueves
-        assertEquals("Pierna B · core", SeedData.dayFor("recomp", 5)?.name)    // viernes
+    fun `los nombres de rutina no se repiten`() {
+        val nombres = SeedData.plans.map { it.name }
+        assertEquals(nombres.size, nombres.toSet().size)
     }
 
     @Test
-    fun `los dias sin rutina son de descanso`() {
-        listOf(3, 6, 7).forEach {   // miércoles, sábado, domingo
-            assertTrue("El día $it no debería tener rutina", SeedData.dayFor("recomp", it) == null)
-        }
-    }
-
-    @Test
-    fun `no hay dos dias de pierna seguidos`() {
-        val porDia = SeedData.groupOf("recomp")!!.days.associateBy { it.weekday }
-        (1..6).forEach { d ->
-            val hoy = porDia[d]?.name.orEmpty()
-            val manana = porDia[d + 1]?.name.orEmpty()
-            assertTrue(
-                "Dos días de pierna seguidos ($d y ${d + 1})",
-                !(hoy.startsWith("Pierna") && manana.startsWith("Pierna"))
-            )
-        }
-    }
-
-    @Test
-    fun `el plan tiene cuatro dias`() {
-        assertEquals(4, SeedData.groupOf("recomp")!!.days.size)
-    }
-
-    @Test
-    fun `el plan retirado ya no existe pero sus rutinas estan en obsoletos`() {
-        assertTrue(SeedData.groupOf("inicio") == null)
-        listOf("Inicio · Día A", "Inicio · Día B").forEach {
+    fun `las rutinas antiguas estan en obsoletos para retirarlas`() {
+        listOf(
+            "Torso A · empuje", "Pierna A · salto", "Torso B · tirón", "Pierna B · core",
+            "Voley · Salto y pierna", "Inicio · Día A"
+        ).forEach {
             assertTrue("«$it» debe estar en obsoleteNames", SeedData.obsoleteNames.contains(it))
         }
     }
 
     @Test
-    fun `el trabajo de voleibol esta dentro del plan principal`() {
-        val ejercicios = SeedData.groupOf("recomp")!!.days.flatMap { it.items }.map { it.exerciseId }
-        listOf(
-            "elevacion_de_gemelos_de_pie",   // salto
-            "face_pull",                     // hombro sano
-            "abductores_en_maquina",          // estabilidad lateral
-            "pallof_press",                   // core antirrotación
-            "lenador_en_polea"                // rotación
-        ).forEach {
-            assertTrue("Falta «$it», que venía del plan de voley", ejercicios.contains(it))
+    fun `ninguna rutina actual esta marcada como obsoleta`() {
+        SeedData.plans.forEach {
+            assertTrue("«${it.name}» se borraría al resembrar", it.name !in SeedData.obsoleteNames)
         }
     }
 
     @Test
-    fun `las secciones de la guia coinciden con las claves de plan`() {
-        val ids = PlanGuide.secciones.map { it.id }
-        SeedData.groups.forEach {
-            assertTrue("No hay sección para el plan «${it.key}»", ids.contains(it.key))
-        }
-    }
-
-    @Test
-    fun `todas las secciones tienen contenido`() {
+    fun `todas las secciones de consejos tienen contenido`() {
         assertTrue(PlanGuide.secciones.isNotEmpty())
         PlanGuide.secciones.forEach { s ->
             assertTrue("Sección sin título", s.titulo.isNotBlank())
@@ -122,16 +127,13 @@ class PlanGuideTest {
     }
 
     @Test
-    fun `los nombres de rutina no se repiten entre planes`() {
-        val nombres = SeedData.plans.map { it.name }
-        assertEquals(nombres.size, nombres.toSet().size)
-    }
-
-    @Test
-    fun `los planes retirados estan en la lista de obsoletos`() {
-        listOf("Voley · Salto y pierna", "Adaptación A", "Pierna A", "Inicio · Día A")
-            .forEach {
-                assertTrue("«$it» debe estar en obsoleteNames", SeedData.obsoleteNames.contains(it))
-            }
+    fun `los consejos no llevan datos personales`() {
+        // El repositorio es público.
+        val todo = PlanGuide.secciones.joinToString { s ->
+            s.titulo + s.resumen + s.destacado.orEmpty() + s.bloques.joinToString { it.cuerpo }
+        }
+        listOf("Alejandro", "75 kg", "tus 75", "181").forEach {
+            assertTrue("Los consejos mencionan «$it»", !todo.contains(it))
+        }
     }
 }

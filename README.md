@@ -17,7 +17,7 @@ Kotlin + Jetpack Compose (Material 3) + Room. Sin conexión a internet: todo es 
 Cada ejercicio es una tarjeta con sus series: peso, repeticiones y check al completarla.
 El volumen (kg levantados) se calcula solo.
 
-**Máquinas** — catálogo de 256 ejercicios con foto, buscador (nombre, músculo o material)
+**Máquinas** — catálogo de 266 ejercicios con foto, buscador (nombre, músculo o material)
 y filtros por grupo muscular. Al abrir uno ves tu mejor marca, la evolución del peso y un
 botón que busca en YouTube cómo se hace.
 
@@ -39,7 +39,7 @@ blanco.
 
 ```
 app/src/main/
-├── assets/exercises/          256 imágenes .webp
+├── assets/exercises/          266 imágenes .webp
 ├── java/com/alejandro/appgym/
 │   ├── data/                  Room: entidades, DAOs, repositorio, catálogo
 │   ├── ui/
@@ -61,13 +61,15 @@ app/src/main/
 
 ## El plan cargado
 
-Si en la bienvenida eliges empezar con plan, se carga **Grasa y músculo**
-(`data/SeedData.kt`): cuatro días de torso/pierna repartidos por la semana. Está pensado
-para un gimnasio normal, con máquinas, poleas, multipower y mancuernas.
+Si en la bienvenida eliges empezar con plan, se carga **Grasa y tono**
+(`data/SeedData.kt`): seis rutinas sin día fijo (Pecho y bíceps, Espalda y tríceps,
+Pierna y glúteo, Hombro y core, Cuerpo entero y Cardio). Cada día pulsas la que quieras
+y te sale qué hacer: series, rango de repeticiones y kilos sugeridos según lo que
+hiciste la última vez (`util/Progresion.kt`).
 
-Está explicado dentro de la app, en **Rutinas → Tu plan**: fases, cómo progresar, comida y qué esperar mes a mes. Los textos viven en `data/PlanGuide.kt`. Para cambiarlo, edita `SeedData.kt` y sube
-`VERSION`: la app sustituye las rutinas automáticas sin tocar las que hayas creado tú ni
-las que ya se hayan usado en algún entrenamiento.
+Los consejos están dentro de la app, en **Rutinas → Consejos**: cómo funcionan los kilos sugeridos, cómo elegir cada día, comida y qué esperar. Los textos viven en `data/PlanGuide.kt`. Para cambiarlo, edita `SeedData.kt` y sube
+`VERSION`: la app sustituye las rutinas automáticas sin tocar las que hayas creado tú.
+El historial no se pierde: cada día guarda su propio nombre y sus series.
 
 ## Exportar informe
 

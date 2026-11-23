@@ -71,11 +71,9 @@ import com.alejandro.appgym.ui.theme.VoltBorder
 @Composable
 fun PlanScreen(vm: GymViewModel, nav: NavHostController) {
 
-    val planActivo by vm.activePlan.collectAsStateWithLifecycle()
-    val diasEntrenados by vm.trainedDays.collectAsStateWithLifecycle()
-    val rutinas by vm.routines.collectAsStateWithLifecycle()
     val accent = MaterialTheme.colorScheme.primary
-    var abierta by remember { mutableStateOf<String?>(planActivo) }
+    // La primera sección abierta: es la que dice cómo usar los kilos sugeridos.
+    var abierta by remember { mutableStateOf(PlanGuide.secciones.firstOrNull()?.id) }
 
     LazyColumn(
         Modifier
@@ -99,10 +97,10 @@ fun PlanScreen(vm: GymViewModel, nav: NavHostController) {
                 )
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("Tu plan", style = MaterialTheme.typography.headlineMedium, color = TextPrimary)
+                    Text("Consejos", style = MaterialTheme.typography.headlineMedium, color = TextPrimary)
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        "Perder grasa, ganar músculo",
+                        "Perder grasa y tonificar",
                         style = MaterialTheme.typography.bodyLarge,
                         color = TextSecondary
                     )
@@ -110,46 +108,13 @@ fun PlanScreen(vm: GymViewModel, nav: NavHostController) {
             }
         }
 
-        /* -------- Dónde estás ahora -------- */
-        item { PlanActual(planActivo, diasEntrenados, accent) }
-
-        /* -------- Rutinas de la fase -------- */
-        item { Spacer(Modifier.height(18.dp)) }
-        item {
-            SectionTitle("Las que te tocan")
-        }
-        item {
-            val grupo = SeedData.groupOf(planActivo)
-            val nombres = grupo?.days?.map { it.name } ?: emptyList()
-
-            Column(Modifier.padding(horizontal = Gutter)) {
-                nombres.forEachIndexed { i, nombre ->
-                    val rutina = rutinas.firstOrNull { it.name == nombre }
-                    RutinaFila(
-                        nombre = nombre,
-                        meta = grupo?.days?.getOrNull(i)?.let {
-                            "${it.items.size} ejercicios"
-                        } ?: "",
-                        primero = i == 0,
-                        onClick = { rutina?.let { r -> nav.navigate(Routes.routine(r.id)) } }
-                    )
-                    if (i < nombres.lastIndex) Spacer(Modifier.height(8.dp))
-                }
-            }
-        }
-
-        /* -------- Secciones -------- */
-        item { Spacer(Modifier.height(22.dp)) }
-        item {
-            SectionTitle("El plan al detalle")
-        }
+        item { Spacer(Modifier.height(8.dp)) }
 
         items(PlanGuide.secciones) { seccion ->
-            val activa = seccion.id == planActivo
             SeccionCard(
                 seccion = seccion,
                 expandida = abierta == seccion.id,
-                destacadaAhora = activa,
+                destacadaAhora = false,
                 accent = accent,
                 onToggle = { abierta = if (abierta == seccion.id) null else seccion.id }
             )
@@ -158,96 +123,6 @@ fun PlanScreen(vm: GymViewModel, nav: NavHostController) {
 }
 
 /* ------------------------------------------------------------------ */
-
-@Composable
-private fun PlanActual(planKey: String, diasEntrenados: Int, accent: Color) {
-    val grupo = SeedData.groupOf(planKey) ?: return
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Gutter)
-            .clip(MaterialTheme.shapes.large)
-            .background(
-                Brush.linearGradient(0f to PlanGradientStart, 0.62f to PlanGradientEnd)
-            )
-            .border(1.dp, VoltBorder, MaterialTheme.shapes.large)
-            .padding(18.dp)
-    ) {
-        Column {
-            Badge("Plan activo", accent)
-            Spacer(Modifier.height(12.dp))
-            Text(grupo.name, style = MaterialTheme.typography.headlineSmall, color = TextPrimary)
-            Spacer(Modifier.height(4.dp))
-            Text(
-                grupo.subtitle,
-                style = MaterialTheme.typography.bodyLarge,
-                color = TextSecondary
-            )
-            Spacer(Modifier.height(14.dp))
-            Text(
-                when (diasEntrenados) {
-                    0 -> "Aún no has registrado ningún día."
-                    1 -> "Llevas 1 día entrenado."
-                    else -> "Llevas $diasEntrenados días entrenados."
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextTertiary
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                "Para cambiar de plan, ve a Rutinas.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextTertiary
-            )
-        }
-    }
-}
-
-@Composable
-private fun RutinaFila(nombre: String, meta: String, primero: Boolean, onClick: () -> Unit) {
-    val accent = MaterialTheme.colorScheme.primary
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = Surface1,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            Modifier.padding(start = 16.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                Modifier
-                    .weight(1f)
-                    .clickable(onClick = onClick)
-            ) {
-                Text(
-                    nombre,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = TextPrimary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(meta, style = MaterialTheme.typography.bodyMedium, color = TextSecondary)
-            }
-            Spacer(Modifier.width(10.dp))
-            Box(
-                Modifier
-                    .size(44.dp)
-                    .clip(Pill)
-                    .background(if (primero) accent else Control)
-                    .clickable(onClick = onClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Rounded.PlayArrow, "Abrir",
-                    tint = if (primero) MaterialTheme.colorScheme.onPrimary else TextSecondary,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun SeccionCard(

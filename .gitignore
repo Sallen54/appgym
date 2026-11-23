@@ -22,3 +22,6 @@ Thumbs.db
 # Salidas de trabajo que no son código
 /app/schemas/
 *.zip
+
+# Documentos personales: no van al repositorio público
+Plan-*.pdf

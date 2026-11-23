@@ -155,9 +155,9 @@ fun WelcomeScreen(vm: GymViewModel) {
                 OpcionInicio(
                     titulo = "Con un plan hecho",
                     detalle = plan?.let {
-                        "${it.name} · ${it.days.size} días por semana. " +
-                            "Puedes cambiarlo entero o borrarlo cuando quieras."
-                    } ?: "Un plan de cuatro días listo para usar.",
+                        "${it.name}: ${it.days.size} rutinas para perder grasa y tonificar. " +
+                            "Cada día eliges una y te dice repeticiones y kilos."
+                    } ?: "Rutinas listas para usar.",
                     seleccionada = conPlan,
                     onClick = { conPlan = true }
                 )

@@ -300,6 +300,18 @@ object ExerciseCatalog {
         /* --- Cardio (ampliación) --- */
         Exercise("andar_en_cinta", "Andar en cinta", "Walking, Treadmill", "Cardio", "Máquina", "Principiante", true, listOf("Cuádriceps"), listOf("Gemelos", "Glúteos", "Isquiotibiales")),
         Exercise("bicicleta_reclinada", "Bicicleta reclinada", "Recumbent Bike", "Cardio", "Máquina", "Principiante", true, listOf("Cuádriceps"), listOf("Gemelos", "Glúteos", "Isquiotibiales")),
+
+        /* --- Básicos que faltaban --- */
+        Exercise("hiperextensiones_en_banco", "Hiperextensiones en banco", "Hyperextensions (Back Extensions)", "Espalda", "Máquina", "Principiante", false, listOf("Lumbares"), listOf("Glúteos", "Isquiotibiales")),
+        Exercise("fondos_para_pecho", "Fondos para pecho", "Dips - Chest Version", "Pecho", "Peso corporal", "Intermedio", false, listOf("Pecho"), listOf("Hombros", "Tríceps")),
+        Exercise("rueda_abdominal", "Rueda abdominal", "Ab Roller", "Core", "Peso corporal", "Intermedio", false, listOf("Abdominales"), listOf("Hombros")),
+        Exercise("paseo_del_granjero", "Paseo del granjero", "Farmer's Walk", "Trapecio", "Mancuernas", "Intermedio", false, listOf("Antebrazos"), listOf("Abdominales", "Glúteos", "Isquiotibiales", "Lumbares", "Cuádriceps", "Trapecios")),
+        Exercise("swing_con_kettlebell", "Swing con kettlebell", "One-Arm Kettlebell Swings", "Pierna", "Kettlebell", "Intermedio", false, listOf("Isquiotibiales"), listOf("Gemelos", "Glúteos", "Lumbares", "Hombros")),
+        Exercise("dominadas_asistidas_con_banda", "Dominadas asistidas con banda", "Band Assisted Pull-Up", "Espalda", "Bandas", "Principiante", false, listOf("Dorsales"), listOf("Abdominales", "Antebrazos", "Espalda media")),
+        Exercise("peso_muerto_rumano_en_multipower", "Peso muerto rumano en multipower", "Smith Machine Stiff-Legged Deadlift", "Pierna", "Máquina", "Principiante", false, listOf("Isquiotibiales"), listOf("Glúteos", "Lumbares")),
+        Exercise("sentadilla_bulgara_en_multipower", "Sentadilla búlgara en multipower", "Smith Single-Leg Split Squat", "Pierna", "Máquina", "Principiante", false, listOf("Cuádriceps"), listOf("Gemelos", "Glúteos", "Isquiotibiales")),
+        Exercise("saltar_a_la_comba", "Saltar a la comba", "Rope Jumping", "Cardio", "Peso corporal", "Intermedio", true, listOf("Cuádriceps"), listOf("Gemelos", "Isquiotibiales")),
+        Exercise("cuerdas_de_batalla", "Cuerdas de batalla", "Battling Ropes", "Cardio", "Cuerdas", "Principiante", true, listOf("Hombros"), listOf("Pecho", "Antebrazos")),
     )
 
     private val byId: Map<String, Exercise> = all.associateBy { it.id }
@@ -329,8 +341,8 @@ object ExerciseCatalog {
             "elevacion_lateral_con_mancuernas",
             "remo_al_menton_en_polea"
         ),
-        "peso_muerto_rumano" to listOf("curl_femoral_tumbado", "elevacion_gluteo_femoral", "pull_through_en_polea"),
-        "dominadas" to listOf("jalon_al_pecho_agarre_ancho", "jalon_agarre_supino"),
+        "peso_muerto_rumano" to listOf("peso_muerto_rumano_en_multipower", "peso_muerto_rumano_con_mancuernas", "curl_femoral_tumbado"),
+        "dominadas" to listOf("dominadas_asistidas_con_banda", "jalon_al_pecho_agarre_ancho", "jalon_agarre_supino"),
         "plancha_abdominal" to listOf("pallof_press", "crunch_en_maquina")
     )
 

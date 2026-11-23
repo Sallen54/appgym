@@ -26,6 +26,10 @@ interface SessionDao {
     @Query("SELECT DISTINCT routineId FROM sessions WHERE routineId IS NOT NULL")
     suspend fun routineIdsInUse(): List<Long>
 
+    /** Suelta la referencia a una rutina que se va a borrar. El título se queda. */
+    @Query("UPDATE sessions SET routineId = NULL WHERE routineId = :routineId")
+    suspend fun detachRoutine(routineId: Long)
+
     @Query("SELECT * FROM sessions ORDER BY date DESC")
     fun observeAll(): Flow<List<WorkoutSession>>
 
@@ -61,8 +65,28 @@ interface SetDao {
     @Query("SELECT COALESCE(MAX(position), -1) FROM set_entries WHERE sessionId = :sessionId")
     suspend fun maxPosition(sessionId: Long): Int
 
-    @Query("SELECT * FROM set_entries WHERE exerciseId = :exerciseId AND done = 1 ORDER BY createdAt DESC LIMIT 1")
+    /**
+     * La última serie completada del ejercicio, por fecha de la sesión. Antes se
+     * ordenaba por createdAt, y apuntar un día pasado a posteriori lo convertía en
+     * "la última vez".
+     */
+    @Query(
+        """SELECT s.* FROM set_entries s JOIN sessions w ON w.id = s.sessionId
+           WHERE s.exerciseId = :exerciseId AND s.done = 1
+           ORDER BY w.date DESC, s.weight DESC, s.setNumber DESC LIMIT 1"""
+    )
     suspend fun lastDone(exerciseId: String): SetEntry?
+
+    /** Series completadas del ejercicio en la última sesión anterior a [beforeDay]. */
+    @Query(
+        """SELECT s.* FROM set_entries s JOIN sessions w ON w.id = s.sessionId
+           WHERE s.exerciseId = :exerciseId AND s.done = 1 AND w.date = (
+               SELECT MAX(w2.date) FROM set_entries s2 JOIN sessions w2 ON w2.id = s2.sessionId
+               WHERE s2.exerciseId = :exerciseId AND s2.done = 1 AND w2.date < :beforeDay
+           )
+           ORDER BY s.setNumber"""
+    )
+    suspend fun lastSessionDone(exerciseId: String, beforeDay: Long): List<SetEntry>
 
     @Query("SELECT COUNT(*) FROM set_entries WHERE sessionId = :sessionId AND exerciseId = :exerciseId")
     suspend fun countFor(sessionId: Long, exerciseId: String): Int

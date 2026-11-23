@@ -53,13 +53,13 @@ Dates are stored as `LocalDate.toEpochDay()` (Long), times as minutes since midn
 
 **Room migrations.** The DB is at version 7 with real user data on a physical device. Every schema change needs a `Migration` added to `addMigrations(...)` in `AppDatabase.kt`. `fallbackToDestructiveMigration()` is set as a last resort — if you rely on it, users lose their training history. Test the migration against a populated database before shipping.
 
-**Seeded plans.** `SeedData.kt` holds the plan the app installs on first run (currently one: "Grasa y músculo"; an adaptation plan was retired once it had served its purpose). Changing them requires bumping `SeedData.VERSION`; `GymRepository.reseedPlan()` then swaps them in. That function deliberately preserves (a) routines the user created by hand (`planKey` is blank) and (b) old seeded routines already referenced by a logged session. Keep both guarantees. Retired routine names must be added to `SeedData.obsoleteNames` or they linger forever, and `DEFAULT_KEY` must always point at a plan that still exists — `GymViewModel` falls back to it if the stored `activePlan` no longer resolves.
+**Seeded plans.** `SeedData.kt` holds the plan the app installs on first run: "Grasa y tono" (v7), six routines with **no weekday** — Pecho y bíceps, Espalda y tríceps, Pierna y glúteo, Hombro y core, Cuerpo entero, Cardio. Every strength routine ends with 10–15 min of cardio. Each `Item` carries a conservative starting weight (`kg`, stored as `RoutineItem.targetWeight`) used only when there is no history. Changing the plan requires bumping `SeedData.VERSION`; `GymRepository.reseedPlan()` then swaps it in. Retired routines are deleted even if a session used them — history never depended on them (each session keeps its own title and sets), so `detachRoutine` just nulls `routineId`. Hand-made routines are never touched. Retired names must go in `SeedData.obsoleteNames` or they linger forever, and `DEFAULT_KEY` must point at a plan that exists.
 
 ### First run
 
 `WelcomeScreen` shows when `GymViewModel.onboarded` is false, and `AppRoot` returns early so there is no NavHost or bottom bar behind it. Every field is optional; blanks fall back to `DEFAULT_HEIGHT` / `DEFAULT_AGE`, and any screen showing the profile has to tolerate a blank name.
 
-Two details are load-bearing. `onboarded` defaults to `prefs.contains(KEY_SEED_VERSION)`, so anyone who used the app before this screen existed is treated as done and never sees it. And `completeOnboarding` writes `KEY_SEED_VERSION` **whether or not** the user took the plan — otherwise someone who chose to start blank would find four routines appearing on the next release, because `init` would read it as "never seeded". For the same reason `init` only reseeds when the key already exists.
+Two details are load-bearing. `onboarded` defaults to `prefs.contains(KEY_SEED_VERSION)`, so anyone who used the app before this screen existed is treated as done and never sees it. And `completeOnboarding` writes `KEY_SEED_VERSION` **whether or not** the user took the plan — otherwise someone who chose to start blank would find four routines appearing on the next release, because `init` would read it as "never seeded". For the same reason `init` only reseeds when the key already exists. `completeOnboarding` calls `reseedPlan`, not `seedPlan`: `allowBackup` restores the database (not the prefs) on reinstall, so a "fresh" install can come back with old routines that must be retired rather than added to.
 
 ### Room schema export and CI
 
@@ -71,9 +71,9 @@ The schemas are gitignored, so they are a local record only — there are no `Mi
 
 ### Exercise catalog
 
-`ExerciseCatalog.kt` is a hand-written static list of 256 exercises. Each `id` must have a matching `app/src/main/assets/exercises/<id>.webp`. Images load through `AssetImage`, which keeps its own `LruCache` — there is no Coil/Glide dependency and adding one is not necessary.
+`ExerciseCatalog.kt` is a hand-written static list of 266 exercises. Each `id` must have a matching `app/src/main/assets/exercises/<id>.webp`. Images load through `AssetImage`, which keeps its own `LruCache` — there is no Coil/Glide dependency and adding one is not necessary.
 
-`nameEn` is not decoration: `ExerciseDetailScreen`'s "Ver cómo se hace" button opens a YouTube search built from it, because searching the Spanish name returns far worse technique videos. Animated demonstrations are deliberately not bundled — 256 clips would dominate the APK and each would need its licence cleared. This is the only place the app leaves the device, and it does so through an external intent, so the "no network at runtime" rule still holds.
+`nameEn` is not decoration: `ExerciseDetailScreen`'s "Ver cómo se hace" button opens a YouTube search built from it, because searching the Spanish name returns far worse technique videos. Animated demonstrations are deliberately not bundled — 266 clips would dominate the APK and each would need its licence cleared. This is the only place the app leaves the device, and it does so through an external intent, so the "no network at runtime" rule still holds.
 
 `alternativesFor(id)` suggests substitutes when a machine is taken or a movement hurts. It scores candidates by shared muscles rather than by similar names, but the catalog's muscle data is coarse (every deltoid exercise is just "Hombros"), so two hand-written tables override it: `preferidas` for cases the scoring gets wrong, and `opuestos` to stop antagonist pairs being offered as substitutes for each other — abductors were being suggested to replace adductors. Add to those tables rather than tuning the weights.
 
@@ -106,6 +106,12 @@ These are the standing rules. Breaking them is a regression:
 - **Destructive actions need a confirmation dialog** ("Vaciar el día", "Quitar ejercicio") — *except* deleting one set, which deletes immediately and offers Undo in a snackbar. One tap to undo beats a dialog on every set.
 - **The app is used mid-set, one-handed.** Prefer steppers over the keyboard, big tap targets, and fewer things on screen at once.
 
+### Suggested weights
+
+`util/Progresion.kt` is pure Kotlin (JVM-tested in `ProgresionTest`): **double progression**. The routine's `targetReps` is the top of the range and the bottom is two less (12 → 10-12). If every one of the routine's sets at the working weight (the heaviest used) hit the top last session, suggest +2.5 kg (+5 for leg machines, +2 for dumbbells) and restart at the bottom; otherwise same weight, one more rep than the worst set. No history → the item's starting weight, flagged `primeraVez`. After a layoff (`diasSinHacer` ≥ 21 days) it suggests 90 % of the last working weight, 80 % from 60 days, rounded to the nearest plate step (rounding down cut twice: 40 kg × 80 % became 30) and flagged `vuelta` — the owner came back after months off, and returning straight to the old numbers is how people get hurt. "Last session" is by **session date**, not `createdAt` — back-filling an old day used to become "the last time".
+
+`applyRoutine` and `addExerciseToSession` (loose exercises, generic 3 × 10-12) both prefill sets from it; `GymViewModel.objetivos` recomputes it in memory for the day's blocks so `TarjetaEjercicio` can show "4 × 8-10 · 32,5 kg" in the header and the reason in `BloqueObjetivo`. Both must use the same inputs or the card and the prefilled numbers disagree.
+
 ### How logging a set works
 
 `TodayScreen` is an accordion. Only one exercise is expanded — by default the first with sets outstanding, derived from the data rather than stored, so it survives recomposition. Inside it:
@@ -113,6 +119,8 @@ These are the standing rules. Breaking them is a regression:
 - Done sets collapse to a one-line row (`SerieHecha`): tapping the check undoes it, tapping the × deletes with Undo.
 - The first set not done is the **active** set: a bordered block with ±2.5 kg and ±1 rep steppers, and a lime "Marcar serie" button. Tapping the number opens the numeric keyboard.
 - Marking the last set collapses the whole card to "Completado".
+
+**Rest timer.** Marking a strength set starts `GymViewModel.descanso` with the routine item's `restSeconds` (90 s for loose exercises); un-marking cancels it. It stores the end time, not a countdown, so it survives screen-off and tab changes. `BarraDescanso` (ui/components) sits in the Scaffold's `bottomBar` above the tabs — so it also shows on non-tab screens like the exercise sheet — with −15/+15/Saltar, and vibrates at zero (`VIBRATE` is a normal permission, no prompt).
 
 `vm.deleteSetWithUndo` stashes the entry in `ultimaBorrada`; `AppRoot` observes it and shows the snackbar. Deleting and restoring keeps the original `setNumber` and `position`.
 
@@ -126,8 +134,10 @@ Dumbbell weight is logged **per dumbbell**, matching Strong and Hevy. `SerieActi
 
 - `TodayScreen.kt` is the largest file and holds the header, week strip, exercise accordion, set rows, both dialogs and the buttons. It is the one most in need of splitting.
 - `Historial`, `ExerciseDetail`, `RoutineDetail` and `Picker` were not part of the redesign. They now use the new tokens but their layout was not reworked — the handoff explicitly leaves them pending.
+- The weekday plan is gone on purpose: the user asked to pick each day's routine himself. `SelectorRutinas` in `TodayScreen` shows the plan's routines as buttons with "hace N días" and outlines the strength routine rested longest. Don't reintroduce "hoy toca X" by weekday.
 - The week strip is a real Monday–Sunday week (it used to be a sliding window centred on the selected date, which made the weekday initials rotate and looked wrong). Chevrons move a week at a time, the calendar button jumps anywhere. There is still no month overview.
 - Marking a rest day lives in the actions block at the bottom of `Hoy`, and only when the day is empty — `setRestDay` clears the day's exercises, so offering it mid-session would silently destroy logged sets.
+- The profile is a visible card at the top of `Progreso` with an "Editar" pill (it used to hide behind a tappable subtitle, and the user couldn't find it). Saving a changed weight logs it as today's `BodyWeight`.
 - "Lo que más trabajas" in `ProgressScreen` was flagged as redundant with Récords in the handoff. The owner chose to keep it for now and decide once he has used it.
 
 ### Don't infer what the user can just tell you
@@ -136,10 +146,12 @@ An earlier version derived the current training "phase" from the date of the old
 
 ## Screens
 
-`Hoy` (log today, week strip, gym entry/exit times) · `Máquinas` (256-exercise catalog with search and muscle filters) · `Rutinas` (three collapsible plans → their days) · `Progreso` (profile, body weight chart, stats, share report) · plus `Plan`, `Historial`, `ExerciseDetail`, `RoutineDetail`, `Picker` reached by navigation.
+`Hoy` (log today, week strip, gym entry/exit times) · `Máquinas` (266-exercise catalog with search and muscle filters) · `Rutinas` (the plan's six routines, plus hand-made ones) · `Progreso` (profile, body weight chart, stats, share report) · plus `Plan` (short tips, titled "Consejos"), `Historial`, `ExerciseDetail`, `RoutineDetail`, `Picker` reached by navigation.
 
 ## Testing
 
-`app/src/test/` runs on the JVM: formatting (`FormatTest`), plan integrity (`PlanGuideTest`), report generation (`ReportBuilderTest`). `app/src/androidTest/GymRepositoryTest.kt` exercises the real Room stack on an in-memory database — one session per day, routine loading idempotency, cascade deletes, set renumbering, time handling.
+There is no Android SDK in Claude's sandbox, but the pure part can still be verified there: the Kotlin compiler bundled in the PyPI package `kotlin-jupyter-kernel` compiles `data/{ExerciseCatalog,SeedData,PlanGuide,Entities}.kt` + `util/{Format,Progresion,ReportBuilder}.kt` and the JVM tests with stub `androidx.room` annotations and a stub `org.junit`; it also bundles kotlinx.coroutines, so `GymRepository` + `Daos` compile against in-memory fake DAOs. Compose code only compiles in CI.
+
+`app/src/test/` runs on the JVM: formatting (`FormatTest`), plan integrity (`PlanGuideTest`), weight suggestions (`ProgresionTest`), report generation (`ReportBuilderTest`). `app/src/androidTest/GymRepositoryTest.kt` exercises the real Room stack on an in-memory database — one session per day, routine loading idempotency, cascade deletes, set renumbering, time handling.
 
 When touching `SeedData.kt`, run `PlanGuideTest` and `GymRepositoryTest`: several tests reference seeded routines by exact name and will catch a rename that would otherwise leave dead buttons in `PlanScreen`.

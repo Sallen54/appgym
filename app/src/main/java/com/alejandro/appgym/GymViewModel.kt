@@ -8,12 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.alejandro.appgym.data.AppDatabase
 import com.alejandro.appgym.data.BodyWeight
 import com.alejandro.appgym.data.ExerciseBlock
+import com.alejandro.appgym.data.ExerciseCatalog
 import com.alejandro.appgym.data.GymRepository
 import com.alejandro.appgym.data.Routine
 import com.alejandro.appgym.data.RoutineItem
 import com.alejandro.appgym.data.SeedData
 import com.alejandro.appgym.data.SetEntry
 import com.alejandro.appgym.data.WorkoutSession
+import com.alejandro.appgym.util.Progresion
 import java.time.LocalDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -48,6 +50,15 @@ data class Profile(
         else -> "máximo"
     }
 }
+
+/** Lo que la rutina pide para un ejercicio del día, con el peso sugerido. */
+data class Objetivo(
+    val series: Int,
+    val minutos: Int,
+    val descanso: Int,
+    val nota: String,
+    val sugerencia: Progresion.Sugerencia
+)
 
 data class DayUiState(
     val date: LocalDate = LocalDate.now(),
@@ -120,7 +131,9 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
             .apply()
         _profile.value = perfil
         if (weightKg > 0) repo.logWeight(LocalDate.now(), weightKg)
-        if (conPlan) repo.seedPlan()
+        // reseed y no seed: si Android restaura una copia de seguridad antigua al
+        // reinstalar, así se retiran las rutinas viejas en vez de sumarse a las nuevas.
+        if (conPlan) repo.reseedPlan()
         _onboarded.value = true
     }
 
@@ -135,13 +148,23 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
     )
     val profile: StateFlow<Profile> = _profile.asStateFlow()
 
-    fun saveProfile(name: String, heightCm: Int, age: Int) {
+    /**
+     * Guarda el perfil. Si viene un peso, se apunta como el de hoy: el peso no es
+     * un dato fijo del perfil sino un registro con fecha, para poder ver la gráfica.
+     */
+    fun saveProfile(name: String, heightCm: Int, age: Int, weightKg: Double = 0.0) {
+        val perfil = Profile(
+            name = name.trim(),
+            heightCm = heightCm.takeIf { it in 120..230 } ?: _profile.value.heightCm,
+            age = age.takeIf { it in 10..100 } ?: _profile.value.age
+        )
         prefs.edit()
-            .putString(KEY_NAME, name)
-            .putInt(KEY_HEIGHT, heightCm)
-            .putInt(KEY_AGE, age)
+            .putString(KEY_NAME, perfil.name)
+            .putInt(KEY_HEIGHT, perfil.heightCm)
+            .putInt(KEY_AGE, perfil.age)
             .apply()
-        _profile.value = Profile(name, heightCm, age)
+        _profile.value = perfil
+        if (weightKg in 25.0..300.0) logWeight(weightKg)
     }
 
     /* ---------------- Peso corporal ---------------- */
@@ -210,13 +233,48 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
         _activePlan.value = key
     }
 
-    /** Días distintos en los que ha entrenado de verdad. Un dato, no una regla. */
-    val trainedDays: StateFlow<Int> = sessions
-        .map { list -> list.size }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
-
     val routineItems: StateFlow<List<RoutineItem>> = repo.observeAllRoutineItems()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /**
+     * Qué toca en cada ejercicio del día: series, rango de repeticiones, peso
+     * sugerido y el porqué. Los objetivos salen de la rutina cargada; si el
+     * ejercicio se añadió suelto, se usa un 3 × 10-12 genérico.
+     */
+    val objetivos: StateFlow<Map<String, Objetivo>> =
+        combine(dayState, routineItems, allSets, sessions) { dia, items, series, sesiones ->
+            val deLaRutina = dia.session?.routineId
+                ?.let { id -> items.filter { it.routineId == id }.associateBy { it.exerciseId } }
+                .orEmpty()
+            val fechaDe = sesiones.associate { it.id to it.date }
+            val hoy = dia.date.toEpochDay()
+            dia.blocks.associate { bloque ->
+                val ejercicio = ExerciseCatalog.find(bloque.exerciseId)
+                val item = deLaRutina[bloque.exerciseId]
+                val previas = series.filter {
+                    it.exerciseId == bloque.exerciseId && it.done &&
+                        (fechaDe[it.sessionId] ?: Long.MAX_VALUE) < hoy
+                }
+                val ultimaFecha = previas.maxOfOrNull { fechaDe[it.sessionId] ?: 0L }
+                val ultima = previas
+                    .filter { fechaDe[it.sessionId] == ultimaFecha }
+                    .sortedBy { it.setNumber }
+                bloque.exerciseId to Objetivo(
+                    series = item?.targetSets ?: bloque.sets.size,
+                    minutos = item?.targetMinutes ?: 0,
+                    descanso = item?.restSeconds ?: 0,
+                    nota = item?.note.orEmpty(),
+                    sugerencia = Progresion.sugerir(
+                        ejercicio = ejercicio,
+                        ultimaSesion = ultima,
+                        objetivo = item?.targetReps?.takeIf { it > 0 } ?: 12,
+                        series = item?.targetSets ?: bloque.sets.size,
+                        pesoInicial = item?.targetWeight ?: 0.0,
+                        diasSinHacer = ultimaFecha?.let { hoy - it }
+                    )
+                )
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     private fun toBlocks(sets: List<SetEntry>): List<ExerciseBlock> =
         sets.groupBy { it.exerciseId }
@@ -256,8 +314,43 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
         val marcando = !entry.done
         repo.updateSet(entry.copy(done = marcando))
         // Al marcar, las series que quedan heredan peso y repeticiones.
-        if (marcando) repo.propagateToPendingSets(entry)
+        if (marcando) {
+            repo.propagateToPendingSets(entry)
+            val cardio = ExerciseCatalog.find(entry.exerciseId)?.isCardio == true
+            if (!cardio) {
+                val segundos = objetivos.value[entry.exerciseId]?.descanso?.takeIf { it > 0 }
+                    ?: DESCANSO_POR_DEFECTO
+                iniciarDescanso(segundos)
+            }
+        } else {
+            saltarDescanso()
+        }
     }
+
+    /* ---------------- Descanso entre series ---------------- */
+
+    /**
+     * El temporizador guarda la hora de fin, no los segundos que quedan: así no se
+     * desajusta aunque la pantalla se apague o se cambie de pestaña.
+     */
+    data class Descanso(val finMs: Long, val totalSeg: Int)
+
+    private val _descanso = MutableStateFlow<Descanso?>(null)
+    val descanso: StateFlow<Descanso?> = _descanso.asStateFlow()
+
+    fun iniciarDescanso(segundos: Int) {
+        _descanso.value = Descanso(System.currentTimeMillis() + segundos * 1000L, segundos)
+    }
+
+    /** Suma o resta segundos al descanso en curso. Nunca por debajo de cero. */
+    fun ajustarDescanso(segundos: Int) {
+        val d = _descanso.value ?: return
+        val ahora = System.currentTimeMillis()
+        val fin = (d.finMs + segundos * 1000L).coerceAtLeast(ahora)
+        _descanso.value = d.copy(finMs = fin, totalSeg = (d.totalSeg + segundos).coerceAtLeast(1))
+    }
+
+    fun saltarDescanso() { _descanso.value = null }
 
     fun deleteSet(entry: SetEntry) = viewModelScope.launch { repo.deleteSet(entry) }
 
@@ -369,6 +462,9 @@ class GymViewModel(app: Application) : AndroidViewModel(app) {
         private const val KEY_AGE = "perfil_edad"
         private const val KEY_ACTIVE_PLAN = "plan_activo"
         private const val KEY_ONBOARDED = "bienvenida_hecha"
+
+        /** Descanso entre series para ejercicios añadidos sueltos, sin rutina. */
+        private const val DESCANSO_POR_DEFECTO = 90
 
         /** Se usan solo si alguien se salta la bienvenida. */
         private const val DEFAULT_HEIGHT = 175

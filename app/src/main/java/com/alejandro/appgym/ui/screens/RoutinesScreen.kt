@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.alejandro.appgym.GymViewModel
-import com.alejandro.appgym.data.PlanGuide
 import com.alejandro.appgym.data.Routine
 import com.alejandro.appgym.data.RoutineItem
 import com.alejandro.appgym.data.SeedData
@@ -74,29 +73,20 @@ import com.alejandro.appgym.ui.theme.TextSecondary
 import com.alejandro.appgym.ui.theme.TextTertiary
 import com.alejandro.appgym.ui.theme.VoltBorder
 
-private val dayHints = listOf(
-    "Lunes" to "L", "Martes" to "M", "Miércoles" to "X", "Jueves" to "J",
-    "Viernes" to "V", "Sábado" to "S", "Domingo" to "D"
-)
-
 @Composable
 fun RoutinesScreen(vm: GymViewModel, nav: NavHostController) {
 
     val routines by vm.routines.collectAsStateWithLifecycle()
     val items by vm.routineItems.collectAsStateWithLifecycle()
-    val planActivo by vm.activePlan.collectAsStateWithLifecycle()
     val accent = MaterialTheme.colorScheme.primary
 
     var showDialog by remember { mutableStateOf(false) }
-    var abierto by remember { mutableStateOf<String?>(null) }
 
-    // Las creadas a mano, más las que quedaron de un plan retirado: si no,
+    // Las creadas a mano, más cualquiera que quedara de un plan retirado: si no,
     // desaparecerían de la vista aunque sigan en la base de datos.
-    val propias = routines.filter {
-        it.planKey.isBlank() || SeedData.groupOf(it.planKey) == null
-    }
-    // El plan que toca va primero.
-    val grupos = SeedData.groups.sortedByDescending { it.key == planActivo }
+    val delPlan = SeedData.plans.map { it.name }.toSet()
+    val propias = routines.filter { it.name !in delPlan }
+    val grupos = SeedData.groups
 
     fun empezar(id: Long) {
         vm.startFromRoutine(id)
@@ -110,7 +100,7 @@ fun RoutinesScreen(vm: GymViewModel, nav: NavHostController) {
     ) {
         ScreenHeader(
             title = "Rutinas",
-            subtitle = SeedData.groupOf(planActivo)?.let { "Sigues «${it.name}»" } ?: "",
+            subtitle = "Elige una y empieza",
             trailing = {
                 Box(
                     Modifier
@@ -132,31 +122,14 @@ fun RoutinesScreen(vm: GymViewModel, nav: NavHostController) {
         LazyColumn(contentPadding = PaddingValues(top = 6.dp, bottom = 30.dp)) {
 
             items(grupos, key = { it.key }) { grupo ->
-                val esActivo = grupo.key == planActivo
                 val dias = grupo.days.mapNotNull { d -> routines.firstOrNull { it.name == d.name } }
-                if (esActivo) {
-                    PlanActivo(
-                        grupo = grupo,
-                        dias = dias,
-                        items = items,
-                        diaDeHoy = SeedData
-                            .dayFor(grupo.key, java.time.LocalDate.now().dayOfWeek.value)
-                            ?.let { d -> dias.firstOrNull { it.name == d.name }?.id },
-                        onAbrir = { nav.navigate(Routes.routine(it)) },
-                        onEmpezar = ::empezar
-                    )
-                } else {
-                    PlanPlegado(
-                        grupo = grupo,
-                        dias = dias,
-                        items = items,
-                        expandido = abierto == grupo.key,
-                        onToggle = { abierto = if (abierto == grupo.key) null else grupo.key },
-                        onActivar = { vm.setActivePlan(grupo.key) },
-                        onAbrir = { nav.navigate(Routes.routine(it)) },
-                        onEmpezar = ::empezar
-                    )
-                }
+                PlanActivo(
+                    grupo = grupo,
+                    dias = dias,
+                    items = items,
+                    onAbrir = { nav.navigate(Routes.routine(it)) },
+                    onEmpezar = ::empezar
+                )
                 Spacer(Modifier.height(12.dp))
             }
 
@@ -187,13 +160,13 @@ fun RoutinesScreen(vm: GymViewModel, nav: NavHostController) {
                     Spacer(Modifier.width(14.dp))
                     Column(Modifier.weight(1f)) {
                         Text(
-                            "Cómo funciona todo",
+                            "Consejos",
                             style = MaterialTheme.typography.titleMedium,
                             color = TextPrimary
                         )
                         Spacer(Modifier.height(2.dp))
                         Text(
-                            "Progresión, comida y descanso",
+                            "Cómo subir peso, comida y descanso",
                             style = MaterialTheme.typography.bodyLarge,
                             color = TextSecondary
                         )
@@ -234,9 +207,9 @@ fun RoutinesScreen(vm: GymViewModel, nav: NavHostController) {
     if (showDialog) {
         NewRoutineDialog(
             onDismiss = { showDialog = false },
-            onCreate = { name, day ->
+            onCreate = { name ->
                 showDialog = false
-                vm.createRoutine(name, day, 0)
+                vm.createRoutine(name, "", 0)
             }
         )
     }
@@ -249,7 +222,6 @@ private fun PlanActivo(
     grupo: SeedData.PlanGroup,
     dias: List<Routine>,
     items: List<RoutineItem>,
-    diaDeHoy: Long?,
     onAbrir: (Long) -> Unit,
     onEmpezar: (Long) -> Unit
 ) {
@@ -269,7 +241,7 @@ private fun PlanActivo(
             .padding(18.dp)
     ) {
         Column {
-            Badge("Plan activo", accent)
+            Badge("Tu plan", accent)
             Spacer(Modifier.height(12.dp))
             Text(grupo.name, style = MaterialTheme.typography.headlineSmall, color = TextPrimary)
             Spacer(Modifier.height(4.dp))
@@ -283,110 +255,13 @@ private fun PlanActivo(
                 val own = items.filter { it.routineId == dia.id }
                 DiaFila(
                     nombre = dia.name,
-                    detalle = dia.dayHint.ifBlank { "Sin día fijo" } +
-                        " · ${own.size} ejercicios · ${own.sumOf { it.targetSets }} series",
-                    destacado = dia.id == diaDeHoy,
+                    detalle = (SeedData.planNamed(dia.name)?.focus ?: "${own.size} ejercicios"),
+                    destacado = false,
                     fondo = Ink.copy(alpha = 0.55f),
                     onClick = { onAbrir(dia.id) },
                     onEmpezar = { onEmpezar(dia.id) }
                 )
                 if (i < dias.lastIndex) Spacer(Modifier.height(8.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun PlanPlegado(
-    grupo: SeedData.PlanGroup,
-    dias: List<Routine>,
-    items: List<RoutineItem>,
-    expandido: Boolean,
-    onToggle: () -> Unit,
-    onActivar: () -> Unit,
-    onAbrir: (Long) -> Unit,
-    onEmpezar: (Long) -> Unit
-) {
-    val giro by animateFloatAsState(if (expandido) 180f else 0f, tween(200), label = "chev")
-    val accent = MaterialTheme.colorScheme.primary
-
-    Surface(
-        shape = MaterialTheme.shapes.large,
-        color = Surface1,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Gutter)
-            .animateContentSize(tween(220))
-    ) {
-        Column {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = onToggle)
-                    .padding(18.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Text(grupo.name, style = MaterialTheme.typography.titleLarge, color = TextPrimary)
-                    Spacer(Modifier.height(3.dp))
-                    Text(
-                        grupo.subtitle,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TextSecondary
-                    )
-                }
-                Icon(
-                    Icons.Rounded.ExpandMore, null,
-                    tint = TextTertiary,
-                    modifier = Modifier
-                        .size(22.dp)
-                        .rotate(giro)
-                )
-            }
-            AnimatedVisibility(expandido) {
-                Column(Modifier.padding(start = 18.dp, end = 18.dp, bottom = 18.dp)) {
-                    Text(
-                        grupo.description,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TextSecondary
-                    )
-                    Spacer(Modifier.height(14.dp))
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clip(Pill)
-                            .background(accent.copy(alpha = 0.14f))
-                            .clickable(onClick = onActivar)
-                            .padding(vertical = 11.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Rounded.CheckCircle, null,
-                            tint = accent,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            "Cambiar a este plan",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = accent
-                        )
-                    }
-                    Spacer(Modifier.height(14.dp))
-                    dias.forEachIndexed { i, dia ->
-                        val own = items.filter { it.routineId == dia.id }
-                        DiaFila(
-                            nombre = dia.name,
-                            detalle = "${own.size} ejercicios · ${own.sumOf { it.targetSets }} series",
-                            destacado = false,
-                            fondo = Surface2,
-                            onClick = { onAbrir(dia.id) },
-                            onEmpezar = { onEmpezar(dia.id) }
-                        )
-                        if (i < dias.lastIndex) Spacer(Modifier.height(8.dp))
-                    }
-                }
             }
         }
     }
@@ -446,44 +321,17 @@ private fun DiaFila(
 /* ------------------------------------------------------------------ */
 
 @Composable
-private fun NewRoutineDialog(onDismiss: () -> Unit, onCreate: (String, String) -> Unit) {
+private fun NewRoutineDialog(onDismiss: () -> Unit, onCreate: (String) -> Unit) {
     var name by remember { mutableStateOf("") }
-    var day by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = Surface2,
         shape = MaterialTheme.shapes.large,
         title = { Text("Nueva rutina", style = MaterialTheme.typography.titleLarge, color = TextPrimary) },
-        text = {
-            Column {
-                DialogField(name, { name = it }, "Nombre (ej. Espalda extra)")
-                Spacer(Modifier.height(16.dp))
-                Text("Día habitual", style = MaterialTheme.typography.bodyMedium, color = TextTertiary)
-                Spacer(Modifier.height(9.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    dayHints.forEach { (d, short) ->
-                        val selected = day == d
-                        Box(
-                            Modifier
-                                .size(34.dp)
-                                .clip(Pill)
-                                .background(if (selected) MaterialTheme.colorScheme.primary else Surface1)
-                                .clickable { day = if (selected) "" else d },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                short,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = if (selected) MaterialTheme.colorScheme.onPrimary else TextSecondary
-                            )
-                        }
-                    }
-                }
-            }
-        },
+        text = { DialogField(name, { name = it }, "Nombre (ej. Espalda extra)") },
         confirmButton = {
-            TextButton(onClick = { onCreate(name, day) }) {
+            TextButton(onClick = { onCreate(name) }) {
                 Text("Crear", color = MaterialTheme.colorScheme.primary)
             }
         },

@@ -51,6 +51,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.alejandro.appgym.GymViewModel
+import com.alejandro.appgym.ui.components.BarraDescanso
 import com.alejandro.appgym.ui.screens.CatalogScreen
 import com.alejandro.appgym.ui.screens.ExerciseDetailScreen
 import com.alejandro.appgym.ui.screens.HistoryScreen
@@ -102,6 +103,7 @@ fun AppRoot() {
     val snackbar = remember { SnackbarHostState() }
     val borrada by vm.ultimaBorrada.collectAsStateWithLifecycle()
     val bienvenidaHecha by vm.onboarded.collectAsStateWithLifecycle()
+    val descanso by vm.descanso.collectAsStateWithLifecycle()
 
     LaunchedEffect(borrada) {
         val entry = borrada ?: return@LaunchedEffect
@@ -128,14 +130,32 @@ fun AppRoot() {
     Scaffold(
         containerColor = Ink,
         snackbarHost = { SnackbarHost(snackbar) },
-        bottomBar = { if (showBar) BottomBar(nav) }
+        bottomBar = {
+            // El descanso sigue a la vista aunque cambies de pestaña o abras la ficha
+            // de un ejercicio mientras esperas.
+            Column {
+                descanso?.let { d ->
+                    Box(
+                        if (showBar) Modifier
+                        else Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+                    ) {
+                        BarraDescanso(
+                            descanso = d,
+                            onAjustar = vm::ajustarDescanso,
+                            onSaltar = vm::saltarDescanso
+                        )
+                    }
+                }
+                if (showBar) BottomBar(nav)
+            }
+        }
     ) { padding ->
         NavHost(
             navController = nav,
             startDestination = Routes.TODAY,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = if (showBar) padding.calculateBottomPadding() else 0.dp)
+                .padding(bottom = padding.calculateBottomPadding())
         ) {
             composable(Routes.TODAY) { TodayScreen(vm, nav) }
             composable(Routes.CATALOG) { CatalogScreen(vm, nav) }

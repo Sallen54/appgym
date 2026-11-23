@@ -137,21 +137,70 @@ class GymRepositoryTest {
     }
 
     @Test
-    fun cargar_una_rutina_arranca_con_el_peso_de_la_ultima_vez() = runTest {
+    fun cargar_una_rutina_repite_peso_si_no_se_completo_el_rango() = runTest {
         repo.seedPlan()
-        val torso = repo.observeRoutines().first().first { it.name == "Torso A · empuje" }
+        val pecho = repo.observeRoutines().first().first { it.name == "Pecho y bíceps" }
 
+        // La última vez: 34 kg pero sin llegar a 10 en todas (la rutina pide 4 × 8-10).
         val antes = repo.sessionForDate(hoy.minusDays(7))
         repo.addExerciseToSession(antes.id, "press_de_pecho_en_maquina")
         val hecha = db.setDao().setsFor(antes.id, "press_de_pecho_en_maquina").first()
         repo.updateSet(hecha.copy(weight = 34.0, reps = 9, done = true))
 
         val s = repo.sessionForDate(hoy)
-        repo.applyRoutine(s.id, torso.id)
+        repo.applyRoutine(s.id, pecho.id)
 
         val press = db.setDao().setsFor(s.id, "press_de_pecho_en_maquina")
-        assertTrue(press.isNotEmpty())
-        assertTrue(press.all { it.weight == 34.0 && it.reps == 9 })
+        assertEquals(4, press.size)
+        assertTrue("Mismo peso", press.all { it.weight == 34.0 })
+        assertTrue("Una repetición más", press.all { it.reps == 10 })
+    }
+
+    @Test
+    fun cargar_una_rutina_sube_peso_si_se_completo_el_rango() = runTest {
+        repo.seedPlan()
+        val pecho = repo.observeRoutines().first().first { it.name == "Pecho y bíceps" }
+
+        val antes = repo.sessionForDate(hoy.minusDays(3))
+        repo.addExerciseToSession(antes.id, "press_de_pecho_en_maquina")
+        repo.addSet(antes.id, "press_de_pecho_en_maquina")   // 4 series
+        db.setDao().setsFor(antes.id, "press_de_pecho_en_maquina").forEach {
+            repo.updateSet(it.copy(weight = 30.0, reps = 10, done = true))
+        }
+
+        val s = repo.sessionForDate(hoy)
+        repo.applyRoutine(s.id, pecho.id)
+
+        val press = db.setDao().setsFor(s.id, "press_de_pecho_en_maquina")
+        assertTrue("Sube 2,5 kg", press.all { it.weight == 32.5 })
+        assertTrue("Vuelve al bajo del rango", press.all { it.reps == 8 })
+    }
+
+    @Test
+    fun sin_historial_se_usa_el_peso_de_partida() = runTest {
+        repo.seedPlan()
+        val pecho = repo.observeRoutines().first().first { it.name == "Pecho y bíceps" }
+        val s = repo.sessionForDate(hoy)
+        repo.applyRoutine(s.id, pecho.id)
+        val press = db.setDao().setsFor(s.id, "press_de_pecho_en_maquina")
+        assertTrue(press.all { it.weight == 30.0 && it.reps == 10 })
+    }
+
+    @Test
+    fun la_ultima_vez_es_por_fecha_de_sesion_y_no_por_cuando_se_apunto() = runTest {
+        // Se apunta primero el día reciente y luego, a posteriori, uno más antiguo.
+        val reciente = repo.sessionForDate(hoy.minusDays(1))
+        repo.addExerciseToSession(reciente.id, "prensa_de_piernas")
+        db.setDao().setsFor(reciente.id, "prensa_de_piernas").forEach {
+            repo.updateSet(it.copy(weight = 100.0, reps = 10, done = true))
+        }
+        val viejo = repo.sessionForDate(hoy.minusDays(10))
+        repo.addExerciseToSession(viejo.id, "prensa_de_piernas")
+        db.setDao().setsFor(viejo.id, "prensa_de_piernas").forEach {
+            repo.updateSet(it.copy(weight = 60.0, reps = 10, done = true))
+        }
+        assertEquals(100.0, repo.lastPerformance("prensa_de_piernas")!!.weight, 0.001)
+        assertTrue(repo.lastSession("prensa_de_piernas", hoy).all { it.weight == 100.0 })
     }
 
     @Test
@@ -170,18 +219,18 @@ class GymRepositoryTest {
     @Test
     fun la_rutina_traslada_series_repeticiones_y_minutos_de_cardio() = runTest {
         repo.seedPlan()
-        val torso = repo.observeRoutines().first().first { it.name == "Torso A · empuje" }
+        val entero = repo.observeRoutines().first().first { it.name == "Cuerpo entero" }
         val s = repo.sessionForDate(hoy)
-        repo.applyRoutine(s.id, torso.id)
+        repo.applyRoutine(s.id, entero.id)
 
         val series = db.setDao().observeForSession(s.id).first()
         val remo = series.filter { it.exerciseId == "remo_ergometro" }
         assertEquals(1, remo.size)
-        assertEquals(12, remo.first().minutes)
+        assertEquals(10, remo.first().minutes)
 
         val press = series.filter { it.exerciseId == "press_de_pecho_en_maquina" }
-        assertEquals(4, press.size)
-        assertTrue(press.all { it.reps == 8 })
+        assertEquals(3, press.size)
+        assertTrue(press.all { it.reps == 12 })
     }
 
     @Test
@@ -190,22 +239,31 @@ class GymRepositoryTest {
         repo.reseedPlan()
         val nombres = repo.observeRoutines().first().map { it.name }
         assertTrue("La rutina retirada sigue ahí", !nombres.contains("Inicio · Día A"))
-        assertTrue(nombres.contains("Torso A · empuje"))
+        assertTrue(nombres.contains("Pecho y bíceps"))
     }
 
     @Test
-    fun resembrar_conserva_una_rutina_retirada_si_ya_se_uso() = runTest {
-        val vieja = repo.createRoutine("Inicio · Día A", "", 4)
-        val s = repo.sessionForDate(hoy)
+    fun resembrar_retira_una_rutina_usada_sin_tocar_el_historial() = runTest {
+        val vieja = repo.createRoutine("Torso A · empuje", "", 4)
+        val s = repo.sessionForDate(hoy.minusDays(2), title = "Torso A · empuje")
         repo.updateSession(s.copy(routineId = vieja))
+        repo.addExerciseToSession(s.id, "press_de_pecho_en_maquina")
 
         repo.reseedPlan()
 
         val nombres = repo.observeRoutines().first().map { it.name }
-        assertTrue(
-            "Una rutina usada en un entrenamiento no debe borrarse",
-            nombres.contains("Inicio · Día A")
-        )
+        assertTrue("La rutina retirada sigue ahí", !nombres.contains("Torso A · empuje"))
+        val despues = db.sessionDao().findById(s.id)!!
+        assertEquals("El título del día se conserva", "Torso A · empuje", despues.title)
+        assertEquals(null, despues.routineId)
+        assertEquals(3, db.setDao().setsFor(s.id, "press_de_pecho_en_maquina").size)
+    }
+
+    @Test
+    fun resembrar_no_toca_las_rutinas_propias() = runTest {
+        repo.createRoutine("Mi espalda", "", 0)
+        repo.reseedPlan()
+        assertTrue(repo.observeRoutines().first().any { it.name == "Mi espalda" })
     }
 
     @Test
@@ -213,7 +271,8 @@ class GymRepositoryTest {
         repo.seedPlan()
         val rutinas = repo.observeRoutines().first()
         assertTrue(rutinas.all { it.planKey == "recomp" })
-        assertEquals("recomp", rutinas.first { it.name == "Torso A · empuje" }.planKey)
+        assertEquals("recomp", rutinas.first { it.name == "Pecho y bíceps" }.planKey)
+        assertEquals(6, rutinas.size)
     }
 
     @Test

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -25,6 +26,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.TrendingUp
 import androidx.compose.material.icons.automirrored.rounded.Undo
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CalendarMonth
@@ -37,7 +39,6 @@ import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Hotel
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material3.AlertDialog
@@ -68,13 +69,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.alejandro.appgym.GymViewModel
+import com.alejandro.appgym.Objetivo
 import com.alejandro.appgym.data.ExerciseBlock
 import com.alejandro.appgym.data.ExerciseCatalog
 import com.alejandro.appgym.data.SeedData
 import com.alejandro.appgym.data.SetEntry
 import com.alejandro.appgym.data.WorkoutSession
 import com.alejandro.appgym.ui.Routes
-import com.alejandro.appgym.ui.components.Badge
 import com.alejandro.appgym.ui.components.EmptyState
 import com.alejandro.appgym.ui.components.ExerciseThumb
 import com.alejandro.appgym.ui.components.Gutter
@@ -82,6 +83,7 @@ import com.alejandro.appgym.ui.components.ProgressRing
 import com.alejandro.appgym.ui.components.SectionTitle
 import com.alejandro.appgym.ui.theme.Control
 import com.alejandro.appgym.ui.theme.Danger
+import com.alejandro.appgym.ui.theme.Ink
 import com.alejandro.appgym.ui.theme.Outline
 import com.alejandro.appgym.ui.theme.Pill
 import com.alejandro.appgym.ui.theme.PlanGradientEnd
@@ -113,6 +115,8 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
     val diasDescanso by vm.restDays.collectAsStateWithLifecycle()
     val planActivo by vm.activePlan.collectAsStateWithLifecycle()
     val perfil by vm.profile.collectAsStateWithLifecycle()
+    val objetivos by vm.objetivos.collectAsStateWithLifecycle()
+    val sesiones by vm.sessions.collectAsStateWithLifecycle()
     val accent = MaterialTheme.colorScheme.primary
 
     var showTimes by remember { mutableStateOf(false) }
@@ -177,9 +181,9 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
         /* ---------------- Ejercicios ---------------- */
         if (!state.isEmpty) {
             item {
-                SectionTitle("Sesión de hoy") {
+                SectionTitle(if (state.date == LocalDate.now()) "Sesión de hoy" else "Sesión del día") {
                     Text(
-                        "Tu plan · ${SeedData.groupOf(planActivo)?.name ?: ""}",
+                        "Consejos",
                         style = MaterialTheme.typography.labelMedium,
                         color = accent,
                         modifier = Modifier.clickable { nav.navigate(Routes.PLAN) }
@@ -201,7 +205,8 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
                 onAddSet = { vm.addSet(block.exerciseId) },
                 onQuitarEjercicio = { vm.removeExercise(block.exerciseId) },
                 onCambiar = { cambiando = block.exerciseId },
-                onAbrirFicha = { nav.navigate(Routes.exercise(block.exerciseId)) }
+                onAbrirFicha = { nav.navigate(Routes.exercise(block.exerciseId)) },
+                objetivo = objetivos[block.exerciseId]
             )
             Spacer(Modifier.height(10.dp))
         }
@@ -223,33 +228,33 @@ fun TodayScreen(vm: GymViewModel, nav: NavHostController) {
                 )
             }
         } else if (state.isEmpty) {
-            // Qué toca hoy según el día de la semana del plan activo.
-            val delDia = SeedData.dayFor(planActivo, state.date.dayOfWeek.value)
-            val rutinaDelDia = delDia?.let { d -> routines.firstOrNull { it.name == d.name } }
+            // Sin días fijos: se elige la rutina del plan que apetezca hoy.
+            val delPlan = SeedData.groupOf(planActivo)?.days.orEmpty()
+                .mapNotNull { p -> routines.firstOrNull { it.name == p.name }?.let { it to p } }
+            val propias = routines.filter { it.planKey.isBlank() }
+            val dia = state.date.toEpochDay()
 
-            item {
-                if (delDia != null && rutinaDelDia != null) {
-                    TarjetaQueToca(
-                        nombre = rutinaDelDia.name,
-                        detalle = "${delDia.items.size} ejercicios · " +
-                            "${delDia.items.sumOf { it.sets }} series",
-                        onEmpezar = { vm.startFromRoutine(rutinaDelDia.id) }
-                    )
-                } else {
-                    EmptyState(
-                        icon = Icons.Rounded.Hotel,
-                        title = "Hoy toca descansar",
-                        message = "Tu plan no tiene sesión asignada a este día. " +
-                            "Puedes marcarlo como descanso o entrenar igualmente."
-                    )
-                }
+            if (delPlan.isNotEmpty()) item {
+                SelectorRutinas(
+                    opciones = delPlan.map { (rutina, plan) ->
+                        val ultima = sesiones
+                            .filter { it.title == rutina.name && !it.restDay && it.date < dia }
+                            .maxOfOrNull { it.date }
+                        OpcionRutina(
+                            id = rutina.id,
+                            nombre = rutina.name,
+                            foco = plan.focus,
+                            ejercicios = plan.items.size,
+                            haceDias = ultima?.let { dia - it }
+                        )
+                    },
+                    onElegir = { vm.startFromRoutine(it) }
+                )
             }
 
-            if (routines.isNotEmpty()) {
-                item {
-                    SectionTitle(if (rutinaDelDia != null) "O carga otra" else "Cargar una rutina")
-                }
-                items(routines.take(6), key = { it.id }) { rutina ->
+            if (propias.isNotEmpty()) {
+                item { SectionTitle("Tus rutinas") }
+                items(propias, key = { it.id }) { rutina ->
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -605,13 +610,26 @@ private fun TarjetaEjercicio(
     onAddSet: () -> Unit,
     onQuitarEjercicio: () -> Unit,
     onCambiar: () -> Unit,
-    onAbrirFicha: () -> Unit
+    onAbrirFicha: () -> Unit,
+    objetivo: Objetivo? = null
 ) {
     val exercise = ExerciseCatalog.require(block.exerciseId)
     val accent = MaterialTheme.colorScheme.primary
     val completado = block.doneSets == block.sets.size
     val activa = block.sets.firstOrNull { !it.done }
     var confirmarQuitar by remember { mutableStateOf(false) }
+    val sugerencia = objetivo?.sugerencia
+
+    // Lo que toca, en una línea: "4 × 8-10 · 32,5 kg". Es lo primero que hay que
+    // ver al llegar a la máquina, así que va en la cabecera y no dentro.
+    val queToca = when {
+        objetivo == null -> null
+        exercise.isCardio -> objetivo.minutos.takeIf { it > 0 }?.let { "$it min" }
+        else -> buildString {
+            append("${objetivo.series} × ${sugerencia!!.rango}")
+            if (sugerencia.kg > 0) append(" · ${sugerencia.kg.weightText()} kg")
+        }
+    }
 
     Surface(
         shape = MaterialTheme.shapes.large,
@@ -643,12 +661,26 @@ private fun TarjetaEjercicio(
                         overflow = TextOverflow.Ellipsis
                     )
                     Spacer(Modifier.height(3.dp))
-                    Text(
-                        if (completado) "Completado · ${block.sets.size} de ${block.sets.size} series"
-                        else "En curso · ${block.doneSets} de ${block.sets.size} series",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (!completado && sugerencia?.sube == true) {
+                            Icon(
+                                Icons.AutoMirrored.Rounded.TrendingUp, "Toca subir peso",
+                                tint = accent,
+                                modifier = Modifier.size(15.dp)
+                            )
+                            Spacer(Modifier.width(5.dp))
+                        }
+                        Text(
+                            when {
+                                completado -> "Completado · ${block.sets.size} de ${block.sets.size} series"
+                                queToca != null && block.doneSets == 0 -> queToca
+                                queToca != null -> "$queToca · ${block.doneSets} de ${block.sets.size}"
+                                else -> "En curso · ${block.doneSets} de ${block.sets.size} series"
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (!completado && sugerencia?.sube == true) accent else TextSecondary
+                        )
+                    }
                 }
                 Spacer(Modifier.width(10.dp))
                 if (completado && !expandida) {
@@ -674,6 +706,13 @@ private fun TarjetaEjercicio(
             /* Contenido */
             AnimatedVisibility(expandida) {
                 Column(Modifier.padding(start = 14.dp, end = 14.dp, bottom = 14.dp)) {
+
+                    if (objetivo != null && !completado &&
+                        (!exercise.isCardio || objetivo.nota.isNotBlank())
+                    ) {
+                        BloqueObjetivo(objetivo, exercise.isCardio)
+                        Spacer(Modifier.height(10.dp))
+                    }
 
                     block.sets.forEach { serie ->
                         if (serie.done) {
@@ -1272,14 +1311,32 @@ private fun DialogoAlternativas(
     )
 }
 
-/** Lo que toca hoy según el plan. Un toque y la sesión queda cargada. */
+/** Una rutina del plan tal como se enseña en el selector del día. */
+data class OpcionRutina(
+    val id: Long,
+    val nombre: String,
+    val foco: String,
+    val ejercicios: Int,
+    /** Días desde la última vez que se hizo. Null si nunca. */
+    val haceDias: Long?
+)
+
+/**
+ * "¿Qué entrenas hoy?": las rutinas del plan como botones. No hay días fijos;
+ * se marca la de fuerza que más tiempo lleva sin hacerse, que suele ser la que
+ * tiene el músculo más descansado.
+ */
 @Composable
-private fun TarjetaQueToca(
-    nombre: String,
-    detalle: String,
-    onEmpezar: () -> Unit
+private fun SelectorRutinas(
+    opciones: List<OpcionRutina>,
+    onElegir: (Long) -> Unit
 ) {
     val accent = MaterialTheme.colorScheme.primary
+    val sugerida = opciones
+        .filter { it.nombre != "Cardio" && it.nombre != "Cuerpo entero" }
+        .maxByOrNull { it.haceDias ?: Long.MAX_VALUE }
+        ?.id
+
     Box(
         Modifier
             .fillMaxWidth()
@@ -1289,37 +1346,112 @@ private fun TarjetaQueToca(
                 Brush.linearGradient(0f to PlanGradientStart, 0.62f to PlanGradientEnd)
             )
             .border(1.dp, VoltBorder, MaterialTheme.shapes.large)
-            .padding(18.dp)
+            .padding(16.dp)
     ) {
         Column {
-            Badge("Hoy toca", accent)
-            Spacer(Modifier.height(12.dp))
-            Text(nombre, style = MaterialTheme.typography.headlineSmall, color = TextPrimary)
+            Text(
+                "¿Qué entrenas hoy?",
+                style = MaterialTheme.typography.headlineSmall,
+                color = TextPrimary
+            )
             Spacer(Modifier.height(4.dp))
-            Text(detalle, style = MaterialTheme.typography.bodyLarge, color = TextSecondary)
-            Spacer(Modifier.height(16.dp))
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .clip(Pill)
-                    .background(accent)
-                    .clickable(onClick = onEmpezar),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Rounded.PlayArrow, null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(19.dp)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    "Empezar",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
+            Text(
+                "Toca una y te sale qué hacer, con las repeticiones y los kilos.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextSecondary
+            )
+            Spacer(Modifier.height(14.dp))
+            opciones.chunked(2).forEachIndexed { fila, par ->
+                if (fila > 0) Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    par.forEach { op ->
+                        BotonRutina(
+                            opcion = op,
+                            destacada = op.id == sugerida,
+                            accent = accent,
+                            onClick = { onElegir(op.id) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (par.size == 1) Spacer(Modifier.weight(1f))
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun BotonRutina(
+    opcion: OpcionRutina,
+    destacada: Boolean,
+    accent: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val forma = RoundedCornerShape(18.dp)
+    Column(
+        modifier
+            .heightIn(min = 104.dp)
+            .clip(forma)
+            .background(Ink.copy(alpha = 0.55f))
+            .border(1.dp, if (destacada) VoltBorderStrong else Color.Transparent, forma)
+            .clickable(onClick = onClick)
+            .padding(13.dp)
+    ) {
+        Text(
+            opcion.nombre,
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(Modifier.height(3.dp))
+        Text(
+            opcion.foco,
+            style = MaterialTheme.typography.bodyMedium,
+            color = TextTertiary,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            when (val d = opcion.haceDias) {
+                null -> "Sin hacer aún"
+                0L -> "Hecha hoy"
+                1L -> "Hace 1 día"
+                else -> "Hace $d días"
+            },
+            style = MaterialTheme.typography.labelMedium,
+            color = if (destacada) accent else TextSecondary
+        )
+    }
+}
+
+/** Qué pide la rutina para este ejercicio y por qué ese peso. */
+@Composable
+private fun BloqueObjetivo(objetivo: Objetivo, cardio: Boolean) {
+    val s = objetivo.sugerencia
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(Surface2)
+            .padding(horizontal = 13.dp, vertical = 11.dp)
+    ) {
+        if (!cardio) {
+            Text(s.motivo, style = MaterialTheme.typography.bodyMedium, color = TextSecondary)
+        }
+        if (objetivo.nota.isNotBlank()) {
+            if (!cardio) Spacer(Modifier.height(5.dp))
+            Text(objetivo.nota, style = MaterialTheme.typography.bodyMedium, color = TextTertiary)
+        }
+        if (objetivo.descanso > 0 && !cardio) {
+            Spacer(Modifier.height(5.dp))
+            Text(
+                "Descansa ${objetivo.descanso} s entre series",
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextTertiary
+            )
         }
     }
 }

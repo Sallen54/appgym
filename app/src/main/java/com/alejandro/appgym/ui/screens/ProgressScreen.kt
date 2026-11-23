@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.BarChart
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.EventAvailable
 import androidx.compose.material.icons.rounded.FitnessCenter
 import androidx.compose.material.icons.rounded.History
@@ -69,6 +70,7 @@ import com.alejandro.appgym.ui.components.SectionTitle
 import com.alejandro.appgym.ui.components.StatCard
 import com.alejandro.appgym.ui.theme.GroupBiceps
 import com.alejandro.appgym.ui.theme.GroupLegs
+import com.alejandro.appgym.ui.theme.Control
 import com.alejandro.appgym.ui.theme.Pill
 import com.alejandro.appgym.ui.theme.Surface1
 import com.alejandro.appgym.ui.theme.Surface2
@@ -119,14 +121,6 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
         item {
             ScreenHeader(
                 title = "Progreso",
-                // Sin nombre (quien se saltó la bienvenida) no debe salir un "·" suelto.
-                subtitle = listOfNotNull(
-                    profile.name.takeIf { it.isNotBlank() },
-                    "${profile.age} años",
-                    "${profile.heightCm} cm",
-                    actual?.let { "${it.weightText()} kg" }
-                ).joinToString(" · "),
-                onSubtitleClick = { showProfileDialog = true },
                 trailing = {
                     CircleIconButton(
                         icon = Icons.Rounded.IosShare,
@@ -148,6 +142,17 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
                         }
                     )
                 }
+            )
+        }
+
+        /* ---------------- Perfil ---------------- */
+        item {
+            TarjetaPerfil(
+                nombre = profile.name,
+                edad = profile.age,
+                alturaCm = profile.heightCm,
+                pesoKg = actual,
+                onEditar = { showProfileDialog = true }
             )
         }
 
@@ -174,10 +179,12 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
                         accent = GroupBiceps,
                         modifier = Modifier.weight(1f)
                     )
+                    // Solo días con alguna serie hecha: antes contaba también los de
+                    // descanso y los que se abrieron sin llegar a entrenar.
                     StatCard(
                         icon = Icons.Rounded.EventAvailable,
-                        value = sessions.count {
-                            val d = LocalDate.ofEpochDay(it.date)
+                        value = doneSets.mapNotNull { sessionDate[it.sessionId] }.distinct().count {
+                            val d = LocalDate.ofEpochDay(it)
                             d.year == today.year && d.month == today.month
                         }.toString(),
                         label = "este mes",
@@ -413,7 +420,10 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
                 }
             }
 
+            // Sin cardio ni ejercicios sin carga: su volumen es 0, y si solo había de
+            // esos, la barra se dibujaba con 0/0 = NaN y la pantalla se cerraba.
             val masTrabajados = doneSets
+                .filter { it.volume > 0 }
                 .groupBy { it.exerciseId }
                 .map { (id, list) -> Triple(id, list.sumOf { it.volume }, list.size) }
                 .sortedByDescending { it.second }
@@ -423,7 +433,7 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
                 item { SectionTitle("Lo que más trabajas") }
                 item {
                     Column(Modifier.padding(horizontal = Gutter)) {
-                        val max = masTrabajados.first().second
+                        val max = masTrabajados.first().second.coerceAtLeast(1.0)
                         masTrabajados.forEach { (id, volumen, series) ->
                             val exercise = ExerciseCatalog.require(id)
                             val color = groupColor(exercise.group)
@@ -569,12 +579,86 @@ fun ProgressScreen(vm: GymViewModel, nav: NavHostController) {
             name = profile.name,
             heightCm = profile.heightCm,
             age = profile.age,
+            weightKg = actual,
             onDismiss = { showProfileDialog = false },
-            onSave = { n, h, e ->
+            onSave = { n, h, e, p ->
                 showProfileDialog = false
-                vm.saveProfile(n, h, e)
+                vm.saveProfile(n, h, e, p)
             }
         )
+    }
+}
+
+/** El perfil a la vista, con un botón de editar que se ve. */
+@Composable
+private fun TarjetaPerfil(
+    nombre: String,
+    edad: Int,
+    alturaCm: Int,
+    pesoKg: Double?,
+    onEditar: () -> Unit
+) {
+    val accent = MaterialTheme.colorScheme.primary
+    val imc = pesoKg?.takeIf { alturaCm > 0 }?.let { it / ((alturaCm / 100.0) * (alturaCm / 100.0)) }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Gutter, vertical = 4.dp)
+            .clip(MaterialTheme.shapes.large)
+            .background(Surface1)
+            .clickable(onClick = onEditar)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            Modifier
+                .size(46.dp)
+                .clip(Pill)
+                .background(accent.copy(alpha = 0.16f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                nombre.trim().firstOrNull()?.uppercase() ?: "·",
+                style = MaterialTheme.typography.titleLarge,
+                color = accent
+            )
+        }
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                nombre.ifBlank { "Tu perfil" },
+                style = MaterialTheme.typography.titleMedium,
+                color = TextPrimary
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                listOfNotNull(
+                    "$edad años",
+                    "$alturaCm cm",
+                    pesoKg?.let { "${it.weightText()} kg" }
+                ).joinToString(" · "),
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextSecondary
+            )
+            if (imc != null) {
+                Text(
+                    "IMC ${String.format(com.alejandro.appgym.util.ES, "%.1f", imc)}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextTertiary
+                )
+            }
+        }
+        Row(
+            Modifier
+                .clip(Pill)
+                .background(Control)
+                .padding(horizontal = 13.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Rounded.Edit, null, tint = TextSecondary, modifier = Modifier.size(15.dp))
+            Spacer(Modifier.width(6.dp))
+            Text("Editar", style = MaterialTheme.typography.labelMedium, color = TextPrimary)
+        }
     }
 }
 
@@ -629,12 +713,14 @@ private fun DialogoPerfil(
     name: String,
     heightCm: Int,
     age: Int,
+    weightKg: Double?,
     onDismiss: () -> Unit,
-    onSave: (String, Int, Int) -> Unit
+    onSave: (String, Int, Int, Double) -> Unit
 ) {
     var newName by remember { mutableStateOf(name) }
     var newHeight by remember { mutableStateOf(heightCm.toString()) }
     var newAge by remember { mutableStateOf(age.toString()) }
+    var newWeight by remember { mutableStateOf(weightKg?.weightText().orEmpty()) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -647,30 +733,50 @@ private fun DialogoPerfil(
                 Spacer(Modifier.height(8.dp))
                 DialogField(newName, { newName = it }, "Tu nombre")
                 Spacer(Modifier.height(18.dp))
-                Text("Altura y edad", style = MaterialTheme.typography.bodyMedium, color = TextTertiary)
+                Text("Altura, edad y peso", style = MaterialTheme.typography.bodyMedium, color = TextTertiary)
                 Spacer(Modifier.height(8.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     NumberField(
                         value = newHeight,
                         onValueChange = { newHeight = it },
                         suffix = "cm",
-                        width = 110
+                        width = 0,
+                        modifier = Modifier.weight(1f)
                     )
                     NumberField(
                         value = newAge,
                         onValueChange = { newAge = it },
                         suffix = "años",
-                        width = 110
+                        width = 0,
+                        modifier = Modifier.weight(1f)
+                    )
+                    NumberField(
+                        value = newWeight,
+                        onValueChange = { newWeight = it },
+                        suffix = "kg",
+                        width = 0,
+                        decimals = true,
+                        modifier = Modifier.weight(1f)
                     )
                 }
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    "Si cambias el peso, se apunta como el de hoy y sale en la gráfica.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextTertiary
+                )
             }
         },
         confirmButton = {
             TextButton(onClick = {
+                val peso = newWeight.toWeightOrNull() ?: 0.0
                 onSave(
                     newName.trim(),
                     newHeight.toIntOrNull()?.coerceIn(120, 230) ?: heightCm,
-                    newAge.toIntOrNull()?.coerceIn(12, 100) ?: age
+                    newAge.toIntOrNull()?.coerceIn(12, 100) ?: age,
+                    // Sin cambios no se registra nada: si no, guardar el nombre
+                    // apuntaría un peso repetido con la fecha de hoy.
+                    if (weightKg != null && kotlin.math.abs(peso - weightKg) < 0.05) 0.0 else peso
                 )
             }) { Text("Guardar", color = MaterialTheme.colorScheme.primary) }
         },

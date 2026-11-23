@@ -1,5 +1,6 @@
 package com.alejandro.appgym.data
 
+import com.alejandro.appgym.util.Progresion
 import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 
@@ -54,7 +55,8 @@ class GymRepository(
         sessionId: Long,
         exerciseId: String,
         setsCount: Int = 3,
-        reps: Int = 10,
+        /** El alto del rango; 12 es el genérico que también usa la tarjeta. */
+        reps: Int = 12,
         weight: Double = 0.0
     ) {
         val existing = sets.countFor(sessionId, exerciseId)
@@ -63,9 +65,23 @@ class GymRepository(
             return
         }
         val pos = sets.maxPosition(sessionId) + 1
-        val last = lastPerformance(exerciseId)
-        val r = last?.reps ?: reps
-        val w = last?.weight ?: weight
+        // Mismo cálculo que la tarjeta (GymViewModel.objetivos), con el 3 × 10-12
+        // genérico de los ejercicios sueltos: si no, la tarjeta sugería un peso y
+        // las series venían rellenas con otro.
+        val dia = sessions.findById(sessionId)?.date?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now()
+        val ultima = lastSession(exerciseId, dia)
+        val fechaUltima = ultima.firstOrNull()?.let { sessions.findById(it.sessionId)?.date }
+        val sugerencia = Progresion.sugerir(
+            ejercicio = ExerciseCatalog.find(exerciseId),
+            ultimaSesion = ultima,
+            objetivo = reps.takeIf { it > 0 } ?: 12,
+            series = setsCount,
+            pesoInicial = weight,
+            diasSinHacer = fechaUltima?.let { dia.toEpochDay() - it }
+        )
+        val w = sugerencia.kg
+        val r = if (ultima.isEmpty() && weight == 0.0) reps
+        else Progresion.repsDeArranque(sugerencia, ultima)
         sets.insertAll(
             (1..setsCount).map {
                 SetEntry(
@@ -204,44 +220,35 @@ class GymRepository(
     /**
      * Sustituye el plan automático por la versión actual de [SeedData].
      *
-     * Solo toca rutinas que creó la propia app y que siguen intactas: si una rutina
-     * antigua ya se usó en algún entrenamiento, se conserva para no romper el historial.
-     * Las rutinas creadas a mano nunca se tocan.
+     * Las rutinas retiradas se borran aunque se hayan usado: el historial no depende
+     * de ellas (cada sesión guarda su propio título y sus series), así que lo único
+     * que se suelta es la referencia. Las rutinas creadas a mano nunca se tocan.
      */
     suspend fun reseedPlan() {
-        val usadas = sessions.routineIdsInUse().toSet()
         for (nombre in SeedData.obsoleteNames) {
             val vieja = routines.findByName(nombre) ?: continue
-            if (vieja.id !in usadas) routines.deleteRoutine(vieja.id)
+            sessions.detachRoutine(vieja.id)
+            routines.deleteRoutine(vieja.id)
         }
         seedPlan()
     }
 
     /**
      * Inserta el plan actual. Si una rutina ya existe por nombre, no se duplica pero
-     * sí se actualizan sus datos de cabecera (día de la semana, color): si no,
-     * un cambio en el plan nunca llegaría a quien ya tiene la rutina creada.
+     * sí se actualizan sus datos de cabecera (color): si no, un cambio en el plan
+     * nunca llegaría a quien ya tiene la rutina creada.
      */
     suspend fun seedPlan() {
         for (plan in SeedData.plans) {
             val existente = routines.findByName(plan.name)
             if (existente != null) {
                 routines.update(
-                    existente.copy(
-                        planKey = plan.key,
-                        dayHint = plan.dayHint,
-                        accent = plan.accent
-                    )
+                    existente.copy(planKey = plan.key, dayHint = "", accent = plan.accent)
                 )
                 continue
             }
             val routineId = routines.insert(
-                Routine(
-                    name = plan.name,
-                    planKey = plan.key,
-                    dayHint = plan.dayHint,
-                    accent = plan.accent
-                )
+                Routine(name = plan.name, planKey = plan.key, dayHint = "", accent = plan.accent)
             )
             plan.items.forEachIndexed { index, item ->
                 routines.insertItem(
@@ -251,6 +258,7 @@ class GymRepository(
                         position = index,
                         targetSets = item.sets,
                         targetReps = item.reps,
+                        targetWeight = item.kg,
                         targetMinutes = item.minutes,
                         restSeconds = item.rest,
                         note = item.note
@@ -260,18 +268,34 @@ class GymRepository(
         }
     }
 
-    /** Vuelca todos los ejercicios de una rutina en la sesión indicada. */
+    /** Series completadas de un ejercicio en la última sesión anterior a [antesDe]. */
+    suspend fun lastSession(exerciseId: String, antesDe: LocalDate): List<SetEntry> =
+        sets.lastSessionDone(exerciseId, antesDe.toEpochDay())
+
+    /**
+     * Vuelca todos los ejercicios de una rutina en la sesión indicada, con el peso y
+     * las repeticiones que sugiere [Progresion] a partir de la última vez.
+     */
     suspend fun applyRoutine(sessionId: Long, routineId: Long) {
         val items = routines.itemsOf(routineId)
+        val dia = sessions.findById(sessionId)?.date?.let { LocalDate.ofEpochDay(it) }
+            ?: LocalDate.now()
         var pos = sets.maxPosition(sessionId) + 1
         val entries = mutableListOf<SetEntry>()
         for (item in items) {
             if (sets.countFor(sessionId, item.exerciseId) > 0) continue
-            // Se arranca con lo que levantaste la última vez. La rutina solo pone
-            // el peso cuando el ejercicio es nuevo y no hay historial que copiar.
-            val ultima = lastPerformance(item.exerciseId)
-            val peso = ultima?.weight ?: item.targetWeight
-            val reps = if (ultima != null && ultima.reps > 0) ultima.reps else item.targetReps
+            val ultima = lastSession(item.exerciseId, dia)
+            val fechaUltima = ultima.firstOrNull()?.let { sessions.findById(it.sessionId)?.date }
+            val sugerencia = Progresion.sugerir(
+                ejercicio = ExerciseCatalog.find(item.exerciseId),
+                ultimaSesion = ultima,
+                objetivo = item.targetReps,
+                series = item.targetSets,
+                pesoInicial = item.targetWeight,
+                diasSinHacer = fechaUltima?.let { dia.toEpochDay() - it }
+            )
+            val peso = sugerencia.kg
+            val reps = if (item.targetReps > 0) Progresion.repsDeArranque(sugerencia, ultima) else 0
             repeat(item.targetSets) { i ->
                 entries += SetEntry(
                     sessionId = sessionId,
